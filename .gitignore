@@ -1,0 +1,9 @@
+build/
+cmake-build-*/
+
+*.elf
+*.uf2
+*.bin
+*.hex
+*.map
+*.dis
