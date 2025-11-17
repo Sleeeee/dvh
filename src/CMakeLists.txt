@@ -1,1 +1,1 @@
-add_subdirectory(victims)
+add_subdirectory(targets)
