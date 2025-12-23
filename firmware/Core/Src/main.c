@@ -109,6 +109,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    /* Blink door LED */
+    HAL_GPIO_TogglePin(DOOR_IN_GPIO_Port, DOOR_IN_Pin);
+    HAL_Delay(500);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -381,8 +385,7 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  /* User can add his own implementation to report the file name and line number, ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
