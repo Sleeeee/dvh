@@ -25,3 +25,5 @@ The Raspberry Pi Pico is quite simple to flash firmware on. Before powering it u
 ![Debugprobe BOOTSEL](../images/debugprobe_bootsel.png)
 
 You may now drag and drop or paste the UF2 firmware on the Pico, which will disappear from the peripheral list. If the Pico's internal LED lights up, you are good to go !
+
+![Debugprobe working](../images/debugprobe_working.jpg)
