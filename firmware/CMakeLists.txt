@@ -66,3 +66,18 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
     # Add user defined libraries
 )
+
+# Build bin file
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_OBJCOPY} -O binary ${CMAKE_PROJECT_NAME}.elf ${CMAKE_PROJECT_NAME}.bin
+    COMMENT "Generating firmware.bin..."
+    BYPRODUCTS ${CMAKE_PROJECT_NAME}.bin
+)
+
+# Add flash target
+add_custom_target(flash
+    COMMAND openocd -f ${CMAKE_SOURCE_DIR}/openocd.cfg -c "program ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.elf verify reset exit"
+    DEPENDS ${CMAKE_PROJECT_NAME}
+    COMMENT "Flashing firmware via SWD..."
+    USES_TERMINAL
+)
