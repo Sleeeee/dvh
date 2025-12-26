@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "lab_swd.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -102,17 +102,14 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USB_PCD_Init();
   /* USER CODE BEGIN 2 */
-
+  Lab_SWD_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* Blink door LED */
-    HAL_GPIO_TogglePin(DOOR_IN_GPIO_Port, DOOR_IN_Pin);
-    HAL_Delay(500);
-
+    Lab_SWD_Loop();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
