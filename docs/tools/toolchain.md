@@ -24,7 +24,9 @@ STM32CubeMX is software designed to abstract all the STM32 firware's boilerplate
 
 Once you have opened STM32CubeMX, you can first create a new project and select the STM32F103C8Tx chip, or open an existing `.ioc` file. You will then be sent to the `Pinout & Configuration` menu, where you will be able to lay out all the desired protocols and interfaces to the chip's actual pins.
 
-![CubeMX Pinout](../images/cubemx_pinout.png)
+<p align="center">
+  <img src="../images/cubemx_pinout.png" alt="CubeMX Pinout" />
+</p>
 
 Once this is taken care of, we can head on to the `Clock Configuration` tab. It will likely have conflicts by default, but that is no big deal. Since we are using a High Speed External (HSE) crystal oscillator for the board, it is very important to choose its corresponding clock frequency. We have chosen the STM32F103C8T6's maximum supported clock frequency of 16 MHz. You can now prompt the program to resolve clock issues, and it will do its best at defining each item's frequency. Key frequencies to watch out for are :
 
@@ -35,7 +37,9 @@ Once this is taken care of, we can head on to the `Clock Configuration` tab. It 
 - APB2 peripheral clocks : 72 MHz
 - USB clock : 48 MHz
 
-![CubeMX Clock](../images/cubemx_clock.png)
+<p align="center">
+  <img src="../images/cubemx_clock.png" alt="CubeMX Clock" />
+</p>
 
 The last thing is to configure the project settings under the `Project Manager` tab. There is not much to do, I personally named the project `firmware` (top-level subfolder of this repository), and chose the CMake toolchain option. Everything is now set up, and you can click the `Generate code` button on the top right, and as mentioned previously, STM32CubeMX will generate all the boilerplate code required to start developing.
 

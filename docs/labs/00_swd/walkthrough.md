@@ -38,7 +38,9 @@ We can now wire the [Debugprobe](../../tools/debugprobe.md) to the SWD interface
 
 You may need to take a look at the pinout for both the DVH board and the [Raspberry Pi Pico](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html).
 
-![SWD wires](../../images/swd_wires.jpg)
+<p align="center">
+  <img width="500" src="../../images/swd_wires.jpg" alt="SWD wires" />
+</p>
 
 ### Initial access
 
@@ -109,23 +111,31 @@ Since we still have two more flags to find, we will need to perform deeper resea
 
 To get started, we will launch Ghidra and create a new project (`File > New Project > Non-Shared Project`) :
 
-![SWD Ghidra new project](../../images/swd_ghidra_newproject.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_newproject.png" alt="SWD Ghidra new project" />
+</p>
 
 Once the project is created, you will need to import the firmware file before sending it for analysis. You can do that under `File > Import File` or by pressing the `[I]` key. Sometimes, Ghidra fails to infer the correct architecture type, so you will likely need to select it manually. As we have seen with the `file` command, the architecture is 32-bit ARM Cortex with Little Endian (`ARM:LE:32:Cortex:default`). You will also need to manually enter the base address, which is still `0x08000000`.
 
 > Little Endian is a method of storing memory, where least-significant bits are stored at the lowest addresses. For example, if a register stores `ec ba 9b 87 dd`, the physical value seen in the assembly would be `dd 87 9b ba ec`. On the contrary, Big endian would store it the same way we read it.
 
-![SWD Ghidra import file](../../images/swd_ghidra_importfile.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_importfile.png" alt="SWD Ghidra import file" />
+</p>
 
 The file has now been imported into the project. Ghidra gives us multiple tools to perform the analysis. Here, we will use `CodeBrowser` (green dragon head). You can either drag and drop `firmware.bin` onto the `CodeBrowser` icon, or press `[ENTER]` with the file selected. When prompted to analyze the file, click `Yes > Analyze`.
 
 If all goes well, you should see a layout similar as the one below. The sidebar on the left allows you to navigate to known symbols (notably functions) with its `Program Tree`. The center menu displays the flash memory map, including instructions from the disassembled code and stack variables. The menu on the right side shows the decompiled code of the current batch of instructions (when you're hovering code that can be decompiled, such as a function).
 
-![SWD Ghidra CodeBrowser](../../images/swd_ghidra_codebrowser.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_codebrowser.png" alt="SWD Ghidra CodeBrowser" />
+</p>
 
 Let's start searching for the remaining flags. As you can see, there is so much data to scroll through that it will be hard to find anything by hand. At first, it can be difficult to find an entrypoint to the code we wish to inspect. This is the point where we remember that we have already found a flag ! It is fairly likely that related logic (in this example, handling flags for this SWD lab) would be written in adjacent blocks of code (in the same file, maybe even the same function). This means that the logic for handling the next flags may reside in adjoining memory sections in the assembly ! Let's see if we can navigate to the address of flag one by browsing the memory for the actual flag string. To do this, go to `Search > Memory`, or use the shortcut `[S]`. Then select `String` and enter the first flag, and Ghidra will search the memory and fetch the address in memory where it resides :
 
-![SWD Ghidra search string](../../images/swd_ghidra_search_string.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_search_string.png" alt="SWD Ghidra search string" />
+</p>
 
 Double click on the one entry that pops up, and you will be taken to the corresponding memory location in disassembly (you can close the `Search Memory` window). You may be able to see some string parts, but Ghidra will most likely fail to actually decode the bytes as a real string. If we take a close look at the bytes, we can already see a part of the flag on the bottom : `...............}`.
 
@@ -133,60 +143,84 @@ We can also see that the first bytes of data have a hex value of `44 56 48 7b`. 
 
 > In assembly (and C), strings always end with the terminator character `0x00`. That is probably how Ghidra knew it was a string. If that had not been decoded already, we would have looked for the hex representation of `}` followed by the string terminator : `7d 00`
 
-![SWD Ghidra hex flag one](../../images/swd_ghidra_hex_flagone.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_hex_flagone.png" alt="SWD Ghidra hex flag one" />
+</p>
 
 We could leave these addresses like this, but a good practice when reverse engineering is to format the code in a way that is readable for us. We will thus tell Ghidra to display the whole flag as a single string, by selecting all blocks from `DVH{` through `}`, then `[Right Click] > Data > string`. This will now display the complete flag. One more thing that we can do is `[Right Click] > Edit Label`, or `[L]` to give a meaningful name to that data (`FLAG_ONE` for example). You should now have something similar to the screenshot below.
 
 > Do not hesitate to overly label any piece of code or data that you find interesting, even if this guide does not go through that process every time. The end goal is to make sense out of the code, so anything that makes it clearer for you is a step forward.
 
-![SWD Ghidra label flag one](../../images/swd_ghidra_label_flagone.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_label_flagone.png" alt="SWD Ghidra label flag one" />
+</p>
 
 We have now sorted out flag one. As we said earlier, it might be interesting to see where that flag is used in the code, to check if the other two flags are near. `[Right Click] > References > Show References To Address` will show you a couple of references, but only one is valid, which makes it fairly easy for us to choose. 
 
-![SWD Ghidra label flag one](../../images/swd_ghidra_reference_flagone.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_reference_flagone.png" alt="SWD Ghidra label flag one" />
+</p>
 
 Double click that reference to navigate to the corresponding block of code :
 
-![SWD Ghidra decompiled](../../images/swd_ghidra_decompiled.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_decompiled.png" alt="SWD Ghidra decompiled" />
+</p>
 
 We have been taken into a function, which means there is now decompiled C-like code on the right section of the screen. By taking a look at the code, we cannot see any direct reference to `FLAG_ONE` in the decompiled code (we can see it in disassembly but that is no big deal). However, when looking at `DAT_08000630` (`[Double Click]`), we can see it is actually a pointer to the address holding `FLAG_ONE`. We will rename it to `flag_one_ref` :
 
-![SWD Ghidra pointer flag one](../../images/swd_ghidra_pointer_flagone.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_pointer_flagone.png" alt="SWD Ghidra pointer flag one" />
+</p>
 
 By scrolling through the function again (if you cannot find it, search for `FLAG_ONE` references again), we see two more `DAT` values (`DAT_08000634` and `DAT_08000638`). We can follow the pointers again (`[Double Click]`), and land on obfuscated hex values.
 
 We cannot really make sense of these hex values, so they are probably encrypted. However, we notice that the second pointer leads exactly right after a null byte `0x00`, the string terminator we mentioned earlier ! Scrolling below the second pointer eventually leads to `0x00` as well.
 
-![SWD Ghidra other pointers](../../images/swd_ghidra_other_pointers.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_other_pointers.png" alt="SWD Ghidra other pointers" />
+</p>
 
 We are going to group the bytes and apply labels to make it easier to read. Select the first encrypted string (from `ef fd` to `d6 00`), and define it as a byte array with `[Right Click] > Data > byte` then `[Right Click] > Data > Create Array`. Do the same for the second encrypted string (`e8 fa` to `a4 00`), then set labels to both byte arrays and initial pointers.
 
-![SWD Ghidra pointers renamed](../../images/swd_ghidra_pointers_renamed.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_pointers_renamed.png" alt="SWD Ghidra pointers renamed" />
+</p>
 
 Now if you go back to the decompiled function that contained all the pointers (`FUN_08000590` in this case), you will understand a bit more about the function thanks to the labels :
 
-![SWD Ghidra decompiled labelled](../../images/swd_ghidra_decompiled_labelled.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_decompiled_labelled.png" alt="SWD Ghidra decompiled labelled" />
+</p>
 
 We are now going to try and understand the function's behavior. For now, we will focus on the uses of `encrypted_one` only, and overlook anything else, because there is quite a lot of intelligible code, and we want to go straight to the point.
 
 We will skip this step because it is kind of trial and error, and it is always tedious to understand decompiled code, but after renaming a couple variables to what they could potentially be used for, we see that the `encrypted_one` variable is used in this loop. This is certainly the decryption step for the string :
 
-![SWD Ghidra decryption encrypted_one](../../images/swd_ghidra_decryption_encryptedone.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_decryption_encryptedone.png" alt="SWD Ghidra decryption encrypted_one" />
+</p>
 
 We notice that an iterator reads the string and applies `^ 0xab`, which is the XOR operator, with the given key `0xab`. We can head back to the byte array that we had defined earlier (`ef fd` to `d6 00`), and copy its content (`[Right Click] > Copy Special > Byte String`). With this data, the only thing that is left is head over to our favorite decryption tool, [Cyberchef](https://gchq.github.io/CyberChef/) (you can still use Python if you are comfortable with it). We can add a XOR formula, and enter the correct key to retrieve the second flag.
 
 > We first have to decode the data with the `From Hex` item. You can also strip the `0x00` since it does not contain any data.
 
-![SWD CyberChef flag two](../../images/swd_cyberchef_flagtwo.png)
+<p align="center">
+  <img src="../../images/swd_cyberchef_flagtwo.png" alt="SWD CyberChef flag two" />
+</p>
 
 Great, only one more to go ! By reading through the end of that same decompiled function and renaming variables if necessary, we will come across this loop, that looks strangely similar to the decryption formula for flag two.
 
-![SWD Ghidra decryption encrypted_two](../../images/swd_ghidra_decryption_encryptedtwo.png)
+<p align="center">
+  <img src="../../images/swd_ghidra_decryption_encryptedtwo.png" alt="SWD Ghidra decryption encrypted_two" />
+</p>
 
 Following the same steps, we can retrieve the third flag, by throwing in the `ADD` and `SUB` formulas with the right offset.
 
 > Your turn ! The Cyberchef recipe has been intentionnally blurred. Can you decrypt these bytes ?
 
-![SWD CyberChef flag three](../../images/swd_cyberchef_flagthree.png)
+<p align="center">
+  <img src="../../images/swd_cyberchef_flagthree.png" alt="SWD CyberChef flag three" />
+</p>
 
 Congratulations, you have found all flags and successfully completed this lab !

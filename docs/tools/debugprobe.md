@@ -14,7 +14,9 @@ Raspberry Pi have developed open firmware for debugging, available for both thei
 
 The UF2 firmware that we will be using can be found in the official Debugprobe (formerly Picoprobe) GitHub repository under the [Releases](https://github.com/raspberrypi/debugprobe/releases) section.
 
-![Debugprobe download](../images/debugprobe_download.png)
+<p align="center">
+  <img src="../images/debugprobe_download.png" alt="Debugprobe download" />
+</p>
 
 Depending on your Pico's series, you will need to choose between `debugprobe_on_pico.uf2` and `debugprobe_on_pico2.uf2`. Latest version by the time of writing this article is v2.2.3, but you should probably choose whichever version is up to date.
 
@@ -22,8 +24,12 @@ Depending on your Pico's series, you will need to choose between `debugprobe_on_
 
 The Raspberry Pi Pico is quite simple to flash firmware on. Before powering it up, hold the `BOOTSEL` button. While holding the button, plug in the cable linked to your computer. If done correctly, you should now see the Pico as an external peripheral in your file explorer.
 
-![Debugprobe BOOTSEL](../images/debugprobe_bootsel.png)
+<p align="center">
+  <img src="../images/debugprobe_bootsel.png" alt="Debugprobe BOOTSEL" />
+</p>
 
 You may now drag and drop or paste the UF2 firmware on the Pico, which will disappear from the peripheral list. If the Pico's internal LED lights up, you are good to go !
 
-![Debugprobe working](../images/debugprobe_working.jpg)
+<p align="center">
+  <img width="500" src="../images/debugprobe_working.jpg" alt="Debugprobe working" />
+</p>

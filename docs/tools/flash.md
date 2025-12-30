@@ -52,7 +52,9 @@ You will now need to connect the debugger to the DVH board using its SWD (Serial
 
 You may need to take a look at the pinout for both the DVH board and the [Raspberry Pi Pico](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html).
 
-![SWD wires](../images/swd_wires.jpg)
+<p align="center">
+  <img width="500" src="../images/swd_wires.jpg" alt="SWD wires" />
+</p>
 
 Once this is done, you can power on both boards, while connecting the debugger to your computer. Both boards should have an LED turned on to display that they are correctly receiving current.
 
