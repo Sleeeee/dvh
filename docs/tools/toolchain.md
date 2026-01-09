@@ -54,7 +54,7 @@ You are now ready to write code for DVH ! This step will not be covered in this 
 Once you have finished writing code for the DVH board, you can use the preconfigured toolchain and run these two commands from inside the `firmware/` directory to build both `.elf` and `.bin` binaries :
 
 ```
-cmake -B build -DCMAKE_TOOLCHAIN_FILE=cmake/gcc-arm-none-eabi.cmake
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/gcc-arm-none-eabi.cmake
 cmake --build build
 ```
 
