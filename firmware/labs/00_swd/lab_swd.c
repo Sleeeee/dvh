@@ -7,23 +7,25 @@ static void Solve_Flag_One(const char* flag, volatile char* buffer) {
   sprintf((char*)buffer, "%s", flag);
 }
 
-static void Solve_Flag_Two(const unsigned char* flag, volatile char* buffer) {
+static void Solve_Flag_Two(const unsigned char* flag, int len, volatile char* buffer) {
   // XOR the encrypted flag bytes using the key
   const unsigned char XOR_KEY = 0xab;
 
-  for (int i = 0; i < sizeof(flag); i++) {
+  for (int i = 0; i < len; i++) {
     buffer[i] = flag[i] ^ XOR_KEY;
   }
+  buffer[len] = '\0';
 }
 
-static void Solve_Flag_Three(const unsigned char* flag, volatile char* buffer) {
+static void Solve_Flag_Three(const unsigned char* flag, int len, volatile char* buffer) {
   // Combination of XOR and single-byte arithmetics to print the flag
   const unsigned char INCREMENT = 0x31;
   const unsigned char XOR_KEY = 0x0f;
 
-  for (int i = 0; i < sizeof(flag); i++) {
+  for (int i = 0; i < len; i++) {
     buffer[i] = (((flag[i] ^ XOR_KEY) + (3 * INCREMENT)) ^ XOR_KEY) - INCREMENT;
   }
+  buffer[len] = '\0';
 }
 
 void Lab_SWD_Init(void) {
@@ -38,8 +40,8 @@ void Lab_SWD_Init(void) {
   volatile char buffer[64];
 
   Solve_Flag_One(FLAG_ONE, buffer);
-  Solve_Flag_Two(FLAG_TWO, buffer);
-  Solve_Flag_Three(FLAG_THREE, buffer);
+  Solve_Flag_Two(FLAG_TWO, sizeof(FLAG_TWO), buffer);
+  Solve_Flag_Three(FLAG_THREE, sizeof(FLAG_THREE), buffer);
 }
 
 void Lab_SWD_Loop(void) {
