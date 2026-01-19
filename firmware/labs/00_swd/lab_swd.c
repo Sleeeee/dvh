@@ -9,13 +9,15 @@ static const unsigned char LAB_SWD_FLAG_TWO[] = {0xef, 0xfd, 0xe3, 0xd0, 0xc3, 0
 // DVH{y0ur_b1n_1s_l34k1ng_c8ffc55f5e}
 static const unsigned char LAB_SWD_FLAG_THREE[] = {0xe8, 0xfa, 0xec, 0x1f, 0x1d, 0xd4, 0x19, 0x16, 0x03, 0x06, 0xd5, 0xf2, 0x03, 0xd5, 0x17, 0x03, 0xf0, 0xd7, 0xd8, 0x0f, 0xd5, 0xf2, 0x0b, 0x03, 0x07, 0xdc, 0x0a, 0x0a, 0x07, 0xd9, 0xd9, 0x0a, 0xd9, 0x09, 0x01, 0xa4};
 
-static void Lab_SWD_Solve_Flag_One(const char* flag, volatile char* buffer) {
+__attribute__((noinline))
+void Lab_SWD_Solve_Flag_One(const char* flag, volatile char* buffer) {
   // Print the flag into the buffer
   // Casting from volatile char* so sprintf understands
   sprintf((char*)buffer, "%s", flag);
 }
 
-static void Lab_SWD_Solve_Flag_Two(const unsigned char* flag, int len, volatile char* buffer) {
+__attribute__((noinline))
+void Lab_SWD_Solve_Flag_Two(const unsigned char* flag, int len, volatile char* buffer) {
   // XOR the encrypted flag bytes using the key
   const unsigned char XOR_KEY = 0xab;
 
@@ -25,7 +27,8 @@ static void Lab_SWD_Solve_Flag_Two(const unsigned char* flag, int len, volatile 
   buffer[len] = '\0';
 }
 
-static void Lab_SWD_Solve_Flag_Three(const unsigned char* flag, int len, volatile char* buffer) {
+__attribute__((noinline))
+void Lab_SWD_Solve_Flag_Three(const unsigned char* flag, int len, volatile char* buffer) {
   // Combination of XOR and single-byte arithmetics to print the flag
   const unsigned char INCREMENT = 0x31;
   const unsigned char XOR_KEY = 0x0f;
