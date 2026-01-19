@@ -27,3 +27,34 @@ jobs:
         run: |
           chmod u+x tests/unit/run_tests.sh
           ./tests/unit/run_tests.sh
+
+  renode-tests:
+    runs-on: ubuntu-22.04
+
+    defaults:
+      run:
+        working-directory: ./firmware
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install ARM Toolchain
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: "14.2.Rel1"
+
+      - name: Install CMake and Ninja
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build
+
+      - name: Build Firmware
+        run: |
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/gcc-arm-none-eabi.cmake
+          cmake --build build
+
+      - name: Run Renode tests
+        uses: antmicro/renode-test-action@v5
+        with:
+          tests-to-run: firmware/tests/renode/src/*.robot
