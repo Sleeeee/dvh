@@ -7,3 +7,7 @@ cmake-build-*/
 *.hex
 *.map
 *.dis
+
+log.html
+report.html
+robot_output.xml
