@@ -8,7 +8,7 @@ Test Teardown         Teardown
 
 *** Variables ***
 ${PLATFORM}           ${CURDIR}/../platforms/dvh.repl
-${ELF}                ${CURDIR}/../../../build/firmware.elf
+${ELF}                ${CURDIR}/../../../build_simulation/firmware.elf
 ${HOOKS_SCRIPT}       ${CURDIR}/utils/hooks.py
 
 *** Test Cases ***

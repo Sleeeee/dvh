@@ -2,7 +2,7 @@
 
 TEST_DIR="tests/renode/src"
 IMAGE_NAME="antmicro/renode:latest"
-OUTPUT_DIR="build/tests"
+OUTPUT_DIR="build_simulation/tests"
 
 if [ ! -d "$TEST_DIR" ]; then
   echo "Error: unable to find the test directory $TEST_DIR"

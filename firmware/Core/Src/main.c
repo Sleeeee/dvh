@@ -88,8 +88,10 @@ int main(void)
 
   /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+  /* Configure the system clock (skip for simulation configuration) */
+  #ifndef SIMULATION
+    SystemClock_Config();
+  #endif
 
   /* USER CODE BEGIN SysInit */
 

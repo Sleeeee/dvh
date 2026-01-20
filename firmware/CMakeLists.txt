@@ -12,6 +12,10 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
+option(SIMULATION "Build for Renode simulation (Bypasses Clock Config)" OFF)
+if(SIMULATION)
+    add_compile_definitions(SIMULATION)
+endif()
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
