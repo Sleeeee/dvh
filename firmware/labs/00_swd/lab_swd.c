@@ -1,4 +1,5 @@
 #include "lab_swd.h"
+#include "main.h"
 #include <stdio.h>
 
 static const char LAB_SWD_FLAG_ONE[] = "DVH{pl41n_text_d3t3ct1v3_fb242a8175}";
@@ -48,5 +49,14 @@ void Lab_SWD_Init(void) {
 }
 
 void Lab_SWD_Loop(void) {
-  // Nothing to do yet
+  // Blink LED
+  HAL_GPIO_TogglePin(DOOR_IN_GPIO_Port, DOOR_IN_Pin);
+  HAL_Delay(1000);
 }
+
+ILab Lab_SWD = {
+  .id = 0,
+  .name = "SWD",
+  .init = Lab_SWD_Init,
+  .loop = Lab_SWD_Loop
+};

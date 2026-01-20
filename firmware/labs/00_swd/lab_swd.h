@@ -1,8 +1,12 @@
 #ifndef LAB_SWD_H
 #define LAB_SWD_H
 
+#include "ilab.h"
+
 void Lab_SWD_Init(void);
 
 void Lab_SWD_Loop(void);
+
+extern ILab Lab_SWD;
 
 #endif

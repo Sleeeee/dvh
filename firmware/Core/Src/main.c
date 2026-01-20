@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "lab_swd.h"
+#include "lab_select.h"
+#include "lab_registry.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -88,30 +89,44 @@ int main(void)
 
   /* USER CODE END Init */
 
-  /* Configure the system clock (skip for simulation configuration) */
+  /* Configure the system clock (skip for DVH simulation) */
   #ifndef SIMULATION
     SystemClock_Config();
   #endif
 
   /* USER CODE BEGIN SysInit */
-
+  
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C2_Init();
-  MX_SPI1_Init();
+  //MX_SPI1_Init(); // WARNING : This line is commented out on DVH 0.1 to repurpose SPI pins as GPIOs
   MX_USART1_UART_Init();
   MX_USB_PCD_Init();
   /* USER CODE BEGIN 2 */
-  Lab_SWD_Init();
+  LabSelect_Init(); // WARNING: DVH 0.1 GPIO init
+  HAL_Delay(100);
+
+  uint8_t lab_id = LabSelect_Read();
+  ILab* lab = LabRegistry_GetById(lab_id);
+
+  if (lab == NULL) {
+    while (1) {
+      // Unable to load a lab, LED on to display idle state
+      HAL_GPIO_WritePin(DOOR_IN_GPIO_Port, DOOR_IN_Pin, GPIO_PIN_SET);
+      HAL_Delay(1000);
+    }
+  }
+
+  lab->init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    Lab_SWD_Loop();
+    lab->loop();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
