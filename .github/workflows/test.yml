@@ -51,8 +51,8 @@ jobs:
 
       - name: Build Firmware
         run: |
-          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/gcc-arm-none-eabi.cmake
-          cmake --build build
+          cmake -B build_simulation -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/gcc-arm-none-eabi.cmake -DSIMULATION=ON
+          cmake --build build_simulation
 
       - name: Run Renode tests
         uses: antmicro/renode-test-action@v5

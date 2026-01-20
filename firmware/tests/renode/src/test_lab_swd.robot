@@ -13,31 +13,24 @@ ${HOOKS_SCRIPT}       ${CURDIR}/utils/hooks.py
 
 *** Test Cases ***
 Verify Lab SWD
-  [Documentation]     Assert flags appear in memory
+    [Documentation]    Verify flags in memory match ELF symbols
+    File Should Exist  ${ELF}    msg=Firmware ELF not found
 
-  File Should Exist   ${ELF}    msg=Error: Firmware ELF not found at ${ELF}
+    # Setup
+    Execute Command    mach create "dvh_test"
+    Execute Command    machine LoadPlatformDescription @${PLATFORM}
+    Execute Command    sysbus LoadELF @${ELF}
+    
+    # Config
+    Create Log Tester  0
+    Execute Command    logLevel 0
+    Execute Command    logLevel 3 sysbus.nvic
 
-  Execute Command     mach create "dvh_test"
-  Execute Command     machine LoadPlatformDescription @${PLATFORM}
-  Execute Command     sysbus LoadELF @${ELF}
-
-  # Load custom python helper functions
-  Execute Command     include @${HOOKS_SCRIPT}
-
-  
-
-  # Flag one hook (entry of Lab_SWD_Solve_Flag_Two)
-  # Read buffer address from R2 register (third argument in Lab_SWD_Solve_Flag_Two)
-  Execute Command     sysbus.cpu AddHook `sysbus GetSymbolAddress "Lab_SWD_Solve_Flag_Two"` "check_register_buffer(2, 64, 'LAB_SWD_FLAG_ONE')"
-
-  # Flag two hook (entry of Lab_SWD_Solve_Flag_Three)
-  # Same logic as flag one hook
-  Execute Command     sysbus.cpu AddHook `sysbus GetSymbolAddress "Lab_SWD_Solve_Flag_Three"` "check_register_buffer(2, 64, 'LAB_SWD_FLAG_TWO')"
-
-  # Flag three hook (entry of Lab_SWD_Loop)
-  # Use an entry hook to capture the buffer address, but check its value only once the function returns
-  Execute Command     sysbus.cpu AddHook `sysbus GetSymbolAddress "Lab_SWD_Solve_Flag_Three"` "capture_buffer_address(2)"
-  Execute Command     sysbus.cpu AddHook `sysbus GetSymbolAddress "Lab_SWD_Loop"` "check_captured_buffer(64, 'LAB_SWD_FLAG_THREE')"
-
-  Execute Command     start
-  Sleep               1s
+    # Run
+    Execute Command    include @${HOOKS_SCRIPT}
+    Execute Command    start
+    
+    # Verify
+    Wait For Log Entry    Success: LAB_SWD_FLAG_ONE found!    timeout=5
+    Wait For Log Entry    Success: LAB_SWD_FLAG_TWO found!    timeout=5
+    Wait For Log Entry    Success: LAB_SWD_FLAG_THREE found!  timeout=5
