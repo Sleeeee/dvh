@@ -1,5 +1,5 @@
-#import "lab_select.h"
-#import "main.h"
+#include "lab_select.h"
+#include "main.h"
 
 // WARNING : DVH 0.1 GPIO alias definition
 #define LAB_BIT0_Pin GPIO_PIN_4
@@ -23,6 +23,15 @@ void LabSelect_Init(void) {
   HAL_GPIO_Init(LAB_BIT0_GPIO_Port, &GPIO_InitStruct);
 }
 
+void LabSelect_Blink(uint8_t count) {
+  for (int i = 0; i < count; i++) {
+    HAL_GPIO_WritePin(DOOR_IN_GPIO_Port, DOOR_IN_Pin, GPIO_PIN_SET);
+    HAL_Delay(200);
+    HAL_GPIO_WritePin(DOOR_IN_GPIO_Port, DOOR_IN_Pin, GPIO_PIN_RESET);
+    HAL_Delay(200);
+  }
+}
+
 uint8_t LabSelect_Read(void) {
   uint8_t lab_id = 0;
 
@@ -31,5 +40,6 @@ uint8_t LabSelect_Read(void) {
   if (HAL_GPIO_ReadPin(LAB_BIT2_GPIO_Port, LAB_BIT2_Pin) == GPIO_PIN_SET) lab_id |= (1 << 2);
   if (HAL_GPIO_ReadPin(LAB_BIT3_GPIO_Port, LAB_BIT3_Pin) == GPIO_PIN_SET) lab_id |= (1 << 3);
 
+  LabSelect_Blink(lab_id);
   return lab_id;
 }
