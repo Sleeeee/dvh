@@ -3,6 +3,7 @@
 UNITY_SRC="tests/unit/lib/unity.c"
 TEST_DIR="tests/unit/src"
 BINARY="$TEST_DIR/test_binary"
+INCLUDES="-I tests/unit/mocks -I Core/Inc -I shared/include"
 
 if [ ! -d "$TEST_DIR" ]; then
   echo "Error: unable to find the test directory $TEST_DIR"
@@ -18,7 +19,7 @@ for test_file in "$TEST_DIR"/*.c; do
   ((TOTAL_TESTS++))
   echo "Compiling $test_file..."
 
-  if ! gcc -o "$BINARY" "$test_file" "$UNITY_SRC"; then
+  if ! gcc $INCLUDES -o "$BINARY" "$test_file" "$UNITY_SRC"; then
     echo "Error: Compilation failed"
     ((FAILED_TESTS++))
     continue
