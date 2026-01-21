@@ -2,9 +2,11 @@
 #include <stddef.h>
 
 #include "00_swd/lab_swd.h"
+#include "01_uart/lab_uart.h"
 
 static ILab* labs[] = {
   &Lab_SWD,
+  &Lab_UART,
   NULL
 };
 
