@@ -32,14 +32,15 @@ void LabSelect_Blink(uint8_t count) {
   }
 }
 
+uint8_t LabSelect_ComputeID(uint8_t b0, uint8_t b1, uint8_t b2, uint8_t b3) {
+  return b0 | (b1 << 1) | (b2 << 2) | (b3 << 3);
+}
+
 uint8_t LabSelect_Read(void) {
-  uint8_t lab_id = 0;
+  uint8_t b0 = HAL_GPIO_ReadPin(LAB_BIT0_GPIO_Port, LAB_BIT0_Pin) == GPIO_PIN_SET;
+  uint8_t b1 = HAL_GPIO_ReadPin(LAB_BIT1_GPIO_Port, LAB_BIT1_Pin) == GPIO_PIN_SET;
+  uint8_t b2 = HAL_GPIO_ReadPin(LAB_BIT2_GPIO_Port, LAB_BIT2_Pin) == GPIO_PIN_SET;
+  uint8_t b3 = HAL_GPIO_ReadPin(LAB_BIT3_GPIO_Port, LAB_BIT3_Pin) == GPIO_PIN_SET;
 
-  if (HAL_GPIO_ReadPin(LAB_BIT0_GPIO_Port, LAB_BIT0_Pin) == GPIO_PIN_SET) lab_id |= (1 << 0);
-  if (HAL_GPIO_ReadPin(LAB_BIT1_GPIO_Port, LAB_BIT1_Pin) == GPIO_PIN_SET) lab_id |= (1 << 1);
-  if (HAL_GPIO_ReadPin(LAB_BIT2_GPIO_Port, LAB_BIT2_Pin) == GPIO_PIN_SET) lab_id |= (1 << 2);
-  if (HAL_GPIO_ReadPin(LAB_BIT3_GPIO_Port, LAB_BIT3_Pin) == GPIO_PIN_SET) lab_id |= (1 << 3);
-
-  LabSelect_Blink(lab_id);
-  return lab_id;
+  return LabSelect_ComputeID(b0, b1, b2, b3);
 }

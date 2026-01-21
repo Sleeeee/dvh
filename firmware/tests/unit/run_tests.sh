@@ -37,7 +37,7 @@ done
 echo "Cleaning up binary..."
 rm "$BINARY"
 
-echo "Test results: $TOTAL_TESTS total, $((TOTAL_TESTS - FAILED_TESTS)) passed"
+echo "Test suites results: $TOTAL_TESTS total, $((TOTAL_TESTS - FAILED_TESTS)) passed"
 
 if [ $FAILED_TESTS -eq 0 ]; then
   echo "Testing successful"

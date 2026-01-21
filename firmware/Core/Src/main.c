@@ -109,6 +109,7 @@ int main(void)
   HAL_Delay(100);
 
   uint8_t lab_id = LabSelect_Read();
+  LabSelect_Blink(lab_id);
   ILab* lab = LabRegistry_GetById(lab_id);
 
   if (lab == NULL) {
