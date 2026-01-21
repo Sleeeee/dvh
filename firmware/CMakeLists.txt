@@ -49,9 +49,13 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    shared/src/utils_uart.c
+
     select/lab_registry.c
     select/lab_select.c
+
     labs/00_swd/lab_swd.c
+    labs/01_uart/lab_uart.c
 )
 
 # Add include paths
