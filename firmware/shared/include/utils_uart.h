@@ -5,4 +5,6 @@
 
 void Utils_UART_ReceiveEnter(void);
 
+void Utils_UART_Readline(char* buffer, uint16_t max_length);
+
 #endif

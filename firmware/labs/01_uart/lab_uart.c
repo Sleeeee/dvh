@@ -1,5 +1,7 @@
 #include "lab_uart.h"
 #include "utils_uart.h"
+#include "utils_flag.h"
+#include <string.h>
 
 extern UART_HandleTypeDef huart1;
 
@@ -17,11 +19,27 @@ void Lab_UART_Init(void) {
 }
 
 void Lab_UART_Loop(void) {
-  while (1) {
-    Utils_UART_ReceiveEnter();
+  Utils_UART_ReceiveEnter();
 
-    char motd[] = "Hello world!";
-    HAL_UART_Transmit(&huart1, (uint8_t*)motd, sizeof(motd), 100);
+  char flag[64];
+  Utils_Flag_Decrypt(LAB_UART_FLAG_ONE, sizeof(LAB_UART_FLAG_ONE), flag, sizeof(flag));
+
+  char motd[] = "[DVH] Welcome to the UART shell !\r\nHere, take this: ";
+  HAL_UART_Transmit(&huart1, (uint8_t*)motd, strlen(motd), 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*)flag, strlen(flag), 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*)"\r\n", 2, 100);
+
+  while (1) {
+    char command[64];
+    Utils_UART_Readline(command, sizeof(command));
+
+    if command[0] == '\0' { continue; }
+
+    if (strcmp(command, "help") == 0) {
+      HAL_UART_Transmit(&huart1, (uint8_t*)"You have asked for help!\r\n", 27, 100);
+    } else {
+      HAL_UART_Transmit(&huart1, (uint8_t*)"Unrecognized command.\r\n", 24, 100);
+    }
   }
 }
 
