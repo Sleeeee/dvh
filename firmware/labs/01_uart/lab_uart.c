@@ -1,5 +1,7 @@
 #include "lab_uart.h"
+#include "lab_uart_commands.h"
 #include "utils_uart.h"
+#include "utils_shell.h"
 #include "utils_flag.h"
 #include <string.h>
 
@@ -14,6 +16,41 @@ static const unsigned char LAB_UART_FLAG_TWO[] = {0x2e, 0x23, 0x3b, 0x0f, 0x01, 
 // DVH{h4v3_y0u_m3t_my_fr13nd_j0hn_9ef271f76e}
 static const unsigned char LAB_UART_FLAG_THREE[] = {0x2e, 0x23, 0x3b, 0x0f, 0x01, 0x5a, 0x1c, 0x46, 0x2c, 0x0d, 0x59, 0x1b, 0x35, 0x18, 0x40, 0x00, 0x36, 0x03, 0x13, 0x2a, 0x15, 0x06, 0x58, 0x5d, 0x04, 0x11, 0x2c, 0x1e, 0x59, 0x06, 0x04, 0x2a, 0x4a, 0x11, 0x0f, 0x5c, 0x5d, 0x44, 0x15, 0x43, 0x5f, 0x0b, 0x17};
 
+void Lab_UART_Transmit_Flag(const unsigned char* flag, int len) {
+  char buffer[64];
+  Utils_Flag_Decrypt(flag, len, buffer, sizeof(buffer));
+
+  HAL_UART_Transmit(&huart1, (uint8_t*)"[DVH] Here, take this: ", 23, 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*)buffer, strlen(buffer), 100);
+  HAL_UART_Transmit(&huart1, (uint8_t*)"\r\n", 2, 100);
+
+  memset(buffer, 0, sizeof(buffer));
+}
+
+static const ShellCommand COMMANDS_ANONYMOUS[] = {
+  {"echo", Lab_UART_Cmd_Echo, "Echo text back to the terminal"},
+  {"clear", Lab_UART_Cmd_Clear, "Clear the terminal"},
+  {"get_users", Lab_UART_Cmd_GetUsers, "Fetch the list of existing users"},
+  {"login", Lab_UART_Cmd_Login, "Log in as an existing user"},
+  {NULL, NULL, NULL}
+};
+
+static const ShellCommand COMMANDS_USER[] = {
+  {"echo", Lab_UART_Cmd_Echo, "Echo text back to the terminal"},
+  {"clear", Lab_UART_Cmd_Clear, "Clear the terminal"},
+  {"get_users", Lab_UART_Cmd_GetUsers, "Fetch the list of existing users"},
+  {"root", Lab_UART_Cmd_Root, "Log in as root"},
+  {NULL, NULL, NULL}
+};
+
+static const ShellCommand COMMANDS_ROOT[] = {
+  {"echo", Lab_UART_Cmd_Echo, "Echo text back to the terminal"},
+  {"clear", Lab_UART_Cmd_Clear, "Clear the terminal"},
+  {"get_users", Lab_UART_Cmd_GetUsers, "Fetch the list of existing users"},
+  {"reboot", Lab_UART_Cmd_Reboot, "Reboot the shell"},
+  {NULL, NULL, NULL}
+};
+
 void Lab_UART_Init(void) {
   // Nothing to do yet
 }
@@ -21,26 +58,17 @@ void Lab_UART_Init(void) {
 void Lab_UART_Loop(void) {
   Utils_UART_ReceiveEnter();
 
-  char flag[64];
-  Utils_Flag_Decrypt(LAB_UART_FLAG_ONE, sizeof(LAB_UART_FLAG_ONE), flag, sizeof(flag));
+  Utils_UART_Writeline("[DVH] Welcome to the UART shell !\r\n", 35);
+  Lab_UART_Transmit_Flag(LAB_UART_FLAG_ONE, sizeof(LAB_UART_FLAG_ONE));
+  Utils_Shell_Start("[anonymous@dvh]$ ", COMMANDS_ANONYMOUS);
 
-  char motd[] = "[DVH] Welcome to the UART shell !\r\nHere, take this: ";
-  HAL_UART_Transmit(&huart1, (uint8_t*)motd, strlen(motd), 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*)flag, strlen(flag), 100);
-  HAL_UART_Transmit(&huart1, (uint8_t*)"\r\n", 2, 100);
+  Utils_UART_Writeline("[DVH] Logged in successfully !\r\n", 32);
+  Lab_UART_Transmit_Flag(LAB_UART_FLAG_TWO, sizeof(LAB_UART_FLAG_TWO));
+  Utils_Shell_Start("[monitoring_svc@dvh]$ ", COMMANDS_USER);
 
-  while (1) {
-    char command[64];
-    Utils_UART_Readline(command, sizeof(command));
-
-    if command[0] == '\0' { continue; }
-
-    if (strcmp(command, "help") == 0) {
-      HAL_UART_Transmit(&huart1, (uint8_t*)"You have asked for help!\r\n", 27, 100);
-    } else {
-      HAL_UART_Transmit(&huart1, (uint8_t*)"Unrecognized command.\r\n", 24, 100);
-    }
-  }
+  Utils_UART_Writeline("[DVH] Root authorization granted !\r\n", 36);
+  Lab_UART_Transmit_Flag(LAB_UART_FLAG_THREE, sizeof(LAB_UART_FLAG_THREE));
+  Utils_Shell_Start("[root@dvh]# ", COMMANDS_ROOT);
 }
 
 ILab Lab_UART = {

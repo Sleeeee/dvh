@@ -51,12 +51,14 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     shared/src/utils_flag.c
     shared/src/utils_uart.c
+    shared/src/utils_shell.c
 
     select/lab_registry.c
     select/lab_select.c
 
     labs/00_swd/lab_swd.c
     labs/01_uart/lab_uart.c
+    labs/01_uart/lab_uart_commands.c
 )
 
 # Add include paths
