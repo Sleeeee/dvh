@@ -3,6 +3,10 @@
 
 extern UART_HandleTypeDef huart1;
 
+void Utils_UART_Writeline(const char* text, int len) {
+  HAL_UART_Transmit(&huart1, (uint8_t*)text, len, 100);
+}
+
 void Utils_UART_ReceiveEnter(void) {
   uint8_t rx;
   while (1) {
@@ -12,11 +16,11 @@ void Utils_UART_ReceiveEnter(void) {
   }
 }
 
-void Utils_UART_Readline(char* buffer, uint16_t max_length) {
+void Utils_UART_Readline(char* buffer, uint16_t max_len) {
   uint8_t rx;
   uint16_t idx = 0;
 
-  memset(buffer, 0, max_length);
+  memset(buffer, 0, max_len);
 
   while (1) {
     // Receive characters one by one
@@ -34,7 +38,7 @@ void Utils_UART_Readline(char* buffer, uint16_t max_length) {
           idx--;
         }
 
-      } else if (idx < (max_length - 1)) {
+      } else if (idx < (max_len - 1)) {
         if (rx >= ' ' && rx <= '~') {
           // Accept ASCII-printable character (between ' ' / 0x20 and '~' / 0x7e)
           HAL_UART_Transmit(&huart1, &rx, 1, 10);
