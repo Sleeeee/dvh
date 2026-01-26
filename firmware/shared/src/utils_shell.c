@@ -3,15 +3,15 @@
 #include <string.h>
 
 void Utils_Shell_Help(const ShellCommand* commands) {
-  Utils_UART_Writeline("Available commands:\r\n", 21);
+  Utils_UART_Writeline("Available commands:\r\n");
 
   const ShellCommand* curr = commands;
   while (curr->name != NULL) {
-    Utils_UART_Writeline("    - ", 6);
-    Utils_UART_Writeline(curr->name, strlen(curr->name));
-    Utils_UART_Writeline(" : ", 3);
-    Utils_UART_Writeline(curr->description, strlen(curr->description));
-    Utils_UART_Writeline("\r\n", 2);
+    Utils_UART_Writeline("    - ");
+    Utils_UART_Writeline(curr->name);
+    Utils_UART_Writeline(" : ");
+    Utils_UART_Writeline(curr->description);
+    Utils_UART_Writeline("\r\n");
 
     curr++;
   }
@@ -27,7 +27,7 @@ ShellStatus Utils_Shell_Execute(char* cmd, char* args, const ShellCommand* comma
     curr++;
   }
 
-  Utils_UART_Writeline("Unrecognized command.\r\n", 23);
+  Utils_UART_Writeline("Unrecognized command.\r\n");
   return SHELL_CONTINUE;
 }
 
@@ -35,7 +35,7 @@ void Utils_Shell_Start(const char* prompt, const ShellCommand* commands) {
   char input[64];
 
   while (1) {
-    Utils_UART_Writeline(prompt, strlen(prompt));
+    Utils_UART_Writeline(prompt);
     Utils_UART_Readline(input, sizeof(input));
 
     if (input[0] == '\0') { continue; }
