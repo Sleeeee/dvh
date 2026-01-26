@@ -5,21 +5,21 @@
 // Shared commands
 ShellStatus Lab_UART_Cmd_Echo(char* args) {
   if (args && *args) {
-    Utils_UART_Writeline(args, strlen(args));
-    Utils_UART_Writeline("\r\n", 2);
+    Utils_UART_Writeline(args);
+    Utils_UART_Writeline("\r\n");
   } else {
-    Utils_UART_Writeline("Usage: echo [text]\r\n", 20);
+    Utils_UART_Writeline("Usage: echo [text]\r\n");
   }
   return SHELL_CONTINUE;
 }
 
 ShellStatus Lab_UART_Cmd_Clear(char* args) {
-  Utils_UART_Writeline("\033[2J\033[H", 7);
+  Utils_UART_Writeline("\033[2J\033[H");
   return SHELL_CONTINUE;
 }
 
 ShellStatus Lab_UART_Cmd_GetUsers(char* args) {
-  Utils_UART_Writeline("Registered users:\r\nroot\tmonitoring_svc\r\n", 30);
+  Utils_UART_Writeline("Registered users:\r\nroot\tmonitoring_svc\r\n");
   return SHELL_CONTINUE;
 }
 
@@ -37,6 +37,6 @@ ShellStatus Lab_UART_Cmd_Root(char* args) {
 
 // Root commands
 ShellStatus Lab_UART_Cmd_Reboot(char* args) {
-  Utils_UART_Writeline("[DVH] System rebooted", 21);
+  Utils_UART_Writeline("[DVH] System rebooted\r\n");
   return SHELL_EXIT;
 }

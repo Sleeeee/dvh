@@ -3,15 +3,19 @@
 
 extern UART_HandleTypeDef huart1;
 
-void Utils_UART_Writeline(const char* text, int len) {
-  HAL_UART_Transmit(&huart1, (uint8_t*)text, len, 100);
+void Utils_UART_Writeline(const char* text) {
+  HAL_UART_Transmit(&huart1, (uint8_t*)text, strlen(text), 1000);
 }
 
 void Utils_UART_ReceiveEnter(void) {
   uint8_t rx;
   while (1) {
     if (HAL_UART_Receive(&huart1, &rx, 1, 100) == HAL_OK) {
-      if (rx == '\r' || rx == '\n') return;
+      if (rx == '\r' || rx == '\n') {
+        // Clear terminal to prevent recurring format issues
+        Utils_UART_Writeline("\033[2J\033[H");
+        return;
+      }
     }
   }
 }
