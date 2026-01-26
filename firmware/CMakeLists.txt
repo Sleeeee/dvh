@@ -49,7 +49,7 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
-    shared/src/utils_flag.c
+    shared/src/utils_secrets.c
     shared/src/utils_uart.c
     shared/src/utils_shell.c
 
@@ -58,6 +58,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 
     labs/00_swd/lab_swd.c
     labs/01_uart/lab_uart.c
+    labs/01_uart/lab_uart_data.c
     labs/01_uart/lab_uart_commands.c
 )
 
