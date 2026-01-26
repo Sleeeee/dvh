@@ -1,5 +1,6 @@
 #include "utils_shell.h"
 #include "utils_uart.h"
+#include <stdio.h>
 #include <string.h>
 
 void Utils_Shell_Help(const ShellCommand* commands) {
@@ -7,12 +8,9 @@ void Utils_Shell_Help(const ShellCommand* commands) {
 
   const ShellCommand* curr = commands;
   while (curr->name != NULL) {
-    Utils_UART_Writeline("    - ");
-    Utils_UART_Writeline(curr->name);
-    Utils_UART_Writeline(" : ");
-    Utils_UART_Writeline(curr->description);
-    Utils_UART_Writeline("\r\n");
-
+    char output[64];
+    snprintf(output, sizeof(output), "    - %s : %s\r\n", curr->name, curr->description);
+    Utils_UART_Writeline(output);
     curr++;
   }
 }
