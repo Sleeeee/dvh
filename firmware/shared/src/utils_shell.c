@@ -29,6 +29,23 @@ ShellStatus Utils_Shell_Execute(char* cmd, char* args, const ShellCommand* comma
   return SHELL_CONTINUE;
 }
 
+ShellStatus Utils_Shell_Process_Input(char* input, const ShellCommand* commands) {
+  if (input[0] == '\0') { return SHELL_CONTINUE; }
+
+    // Retrieve command (first word) and arguments (rest of the input)
+    char* cmd = strtok(input, " ");
+    char* args = strtok(NULL, "");
+
+    if (!cmd) { return SHELL_CONTINUE; }
+
+    if (strcmp(cmd, "help") == 0) {
+      Utils_Shell_Help(commands);
+      return SHELL_CONTINUE;
+    }
+
+    return Utils_Shell_Execute(cmd, args, commands);
+}
+
 void Utils_Shell_Start(const char* prompt, const ShellCommand* commands) {
   char input[64];
 
@@ -36,21 +53,8 @@ void Utils_Shell_Start(const char* prompt, const ShellCommand* commands) {
     Utils_UART_Writeline(prompt);
     Utils_UART_Readline(input, sizeof(input));
 
-    if (input[0] == '\0') { continue; }
-
-    // Retrieve command (first word) and arguments (rest of the input)
-    char* cmd = strtok(input, " ");
-    char* args = strtok(NULL, "");
-
-    if (!cmd) { continue; }
-
-    if (strcmp(cmd, "help") == 0) {
-      Utils_Shell_Help(commands);
-      continue;
-    }
-
-    if (Utils_Shell_Execute(cmd, args, commands) == SHELL_EXIT) {
+    if (Utils_Shell_Process_Input(input, commands) == SHELL_EXIT) {
       return;
-    };
+    }
   }
 }
