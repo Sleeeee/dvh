@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+// General HAL mocks
 #define GPIO_PIN_SET   1
 #define GPIO_PIN_RESET 0
 typedef uint8_t GPIO_PinState;
@@ -56,5 +57,23 @@ static inline void HAL_GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) {
 static inline void HAL_Delay(uint32_t Delay) {
   (void)Delay;
 }
+
+// UART mocks
+typedef struct {
+  uint32_t dummy;
+} UART_HandleTypeDef;
+
+typedef enum {
+  HAL_OK = 0x00U,
+  HAL_ERROR = 0x01U
+} HAL_StatusTypeDef;
+
+HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size, uint32_t Timeout);
+HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+
+extern char SPY_UART_Buffer[128];
+extern int SPY_UART_CallCount;
+
+void SPY_UART_Clear(void);
 
 #endif
