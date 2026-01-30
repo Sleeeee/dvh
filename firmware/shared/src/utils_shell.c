@@ -25,7 +25,7 @@ ShellStatus Utils_Shell_Execute(char* cmd, char* args, const ShellCommand* comma
     curr++;
   }
 
-  Utils_UART_Writeline("Unrecognized command.\r\n");
+  Utils_UART_Writeline("Unrecognized command. Type 'help' to list available commands.\r\n");
   return SHELL_CONTINUE;
 }
 
