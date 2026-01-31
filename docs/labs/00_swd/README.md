@@ -36,4 +36,4 @@ While RDP is a well known mitigation, it is practically impossible to make the c
 
 ## Practice
 
-You can now gain hands-on experience with SWD by performing the [lab](./instructions.md) for this section.
+You can now gain hands-on experience with SWD by completing the [lab](./instructions.md) for this section.
