@@ -11,6 +11,7 @@ struct ILab {
 
   void (*init)(void);
   void (*loop)(void);
+  void (*reset)(void);
 };
 
 #endif
