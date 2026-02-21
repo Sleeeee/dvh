@@ -18,6 +18,12 @@ We will have to connect the DVH board's UART interface with the corresponding Ra
 
 You may need to take a look at the pinout for both the DVH board and the [Raspberry Pi Pico](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html). As per UART standards, a circuit sends data through its `TX` pin, which is received by the other circuit on its `RX` pin.
 
+<p align="center">
+  <img width="500" src="../../images/uart_wires.jpg" alt="UART wires" />
+</p>
+
+> Please note that this picture has been shot on the PCB version 0.1 which does not have the dedicated lab selection pins on board.
+
 ### Initial access
 
 In order to establish a serial communication over UART, we will start by installing `minicom` :
@@ -36,7 +42,9 @@ minicom -b 115200 -o -D /dev/ttyACM0
 
 Once inside the `minicom` interface, press `[ENTER]` to start receiving the UART shell prompt, as well as the first flag !
 
-(image)
+<p align="center">
+  <img src="../../images/uart_minicom.jpg" alt="UART minicom" />
+</p>
 
 > The Raspberry Pi Pico is usually listed as `ttyACM0`, but you can make sure of it by running `ls /dev/tty*`.
 
@@ -44,39 +52,55 @@ Once inside the `minicom` interface, press `[ENTER]` to start receiving the UART
 
 By playing around in the terminal, we can see that this looks like a standard shell, maybe even bash ? We can type common commands, such as `ls`, `pwd`, `whoami` to verify if it is truly a Linux shell :
 
-(image)
+<p align="center">
+  <img src="../../images/uart_hello.png" alt="UART hello" />
+</p>
 
 Unlike we expected, we are not in a traditional shell environment. The system tells us that the `help` command does exist, let's run that :
 
-(image)
+<p align="center">
+  <img src="../../images/uart_help_anonymous.png" alt="UART help anonymous" />
+</p>
 
 This looks promising, we have access to built-in commands to log in and list existing users ! Let's see what we can find there :
 
-(image)
+<p align="center">
+  <img src="../../images/uart_list_users.png" alt="UART list users" />
+</p>
 
 We successfully learned that there are two users on the system, `root` and `monitoring_svc`. However, we cannot directly log in as the root user, so we will have to pivot to `monitoring_svc` first. Unfortunately, it is guarded by a password, and it does not seem like any of the available commands can help us here.
 
 If you are familiar with network equipments and IOT devices, you might remember they regularly use logging over serial connections, to print debug information for example. What we could do here, is to keep listening on our `minicom` session, and reset the power on the DVH board by unplugging it then plugging it back on. Interesting logs will start to appear :
 
-(image)
+<p align="center">
+  <img src="../../images/uart_boot_logs.png" alt="UART boot logs" />
+</p>
 
 If we scroll all the way up and take a close look, we will observe that some credentials have actually been leaked ! We can now safely log in as the `monitoring_svc` user and obtain the second flag :
 
-(image)
+<p align="center">
+  <img src="../../images/uart_user_login.png" alt="UART login" />
+</p>
 
 ### Root escalation
 
 We have now gained user privileges, which means we probably have access to new commands now ! Let's type `help` to verify that :
 
-(image)
+<p align="center">
+  <img src="../../images/uart_help_user.png" alt="UART help user" />
+</p>
 
 We now have access to the `root` command which is noticeably guarded by a password :
 
-(image)
+<p align="center">
+  <img src="../../images/uart_root_attempt.png" alt="UART root attempt" />
+</p>
 
 We can also observe that the `user_db` command was unlocked. By reading its usage, it seems pretty interesting to dump the database's contents :
 
-(image)
+<p align="center">
+  <img src="../../images/uart_database_dump.png" alt="UART database dump" />
+</p>
 
 Unfortunately, we were not able to retrieve plain passwords, but we managed to get the next best thing, which is a password hash for the root user !
 
@@ -114,6 +138,8 @@ Now, we can simply pass the hash, the hashing function, and the wordlist to John
 
 The hash has been successfully brute-forced, and the string in orange is our plaintext password. Let's use that to authenticate as the root user :
 
-(image)
+<p align="center">
+  <img src="../../images/uart_root_login.png" alt="UART root login" />
+</p>
 
 Congratulations, you have found all flags and successfully completed this lab !
