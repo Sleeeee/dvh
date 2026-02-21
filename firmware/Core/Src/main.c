@@ -120,6 +120,11 @@ int main(void)
     }
   }
 
+  // TODO : implement reset button reading (and move logic out of here)
+  if (0) {
+    lab->reset();
+  }
+
   lab->init();
   /* USER CODE END 2 */
 

@@ -108,9 +108,14 @@ void Lab_UART_Loop(void) {
   Utils_Shell_Start("[root@dvh]# ", COMMANDS_ROOT);
 }
 
+void Lab_UART_Reset(void) {
+  // Nothing to do yet
+}
+
 ILab Lab_UART = {
   .id = 1,
   .name = "UART",
   .init = Lab_UART_Init,
-  .loop = Lab_UART_Loop
+  .loop = Lab_UART_Loop,
+  .reset = Lab_UART_Reset
 };

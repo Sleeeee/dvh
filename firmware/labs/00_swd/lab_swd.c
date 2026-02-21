@@ -54,9 +54,14 @@ void Lab_SWD_Loop(void) {
   HAL_Delay(1000);
 }
 
+void Lab_SWD_Reset(void) {
+  // Nothing to do yet
+}
+
 ILab Lab_SWD = {
   .id = 0,
   .name = "SWD",
   .init = Lab_SWD_Init,
-  .loop = Lab_SWD_Loop
+  .loop = Lab_SWD_Loop,
+  .reset = Lab_SWD_Reset
 };
