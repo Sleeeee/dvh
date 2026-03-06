@@ -1,5 +1,5 @@
 #include "../lib/unity.h"
-#include "../../../labs/00_swd/lab_swd.c"
+#include "../../../dvh/labs/00_swd/lab_swd.c"
 #include <string.h>
 
 volatile char buffer[100];
