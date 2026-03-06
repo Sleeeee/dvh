@@ -5,7 +5,7 @@ TEST_DIR="tests/unit/src"
 BINARY="$TEST_DIR/test_binary"
 MOCK_DIR="tests/unit/mocks"
 
-INCLUDES="-I $MOCK_DIR -I Core/Inc -I shared/include"
+INCLUDES="-I $MOCK_DIR -I Core/Inc -I dvh/shared/include"
 MOCK_SOURCE="$MOCK_DIR/mock_hal_uart.c"
 
 if [ ! -d "$TEST_DIR" ]; then

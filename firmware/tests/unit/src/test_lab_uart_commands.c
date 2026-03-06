@@ -1,7 +1,7 @@
 #include "../lib/unity.h"
-#include "../../../labs/01_uart/lab_uart_commands.c"
-#include "../../../labs/01_uart/lab_uart_data.c"
-#include "../../../shared/src/utils_secrets.c"
+#include "../../../dvh/labs/01_uart/lab_uart_commands.c"
+#include "../../../dvh/labs/01_uart/lab_uart_data.c"
+#include "../../../dvh/shared/src/utils_secrets.c"
 #include "stm32f1xx_hal.h"
 #include <string.h>
 

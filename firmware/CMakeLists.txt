@@ -49,26 +49,26 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
-    shared/src/utils_secrets.c
-    shared/src/utils_uart.c
-    shared/src/utils_shell.c
+    dvh/shared/src/utils_secrets.c
+    dvh/shared/src/utils_uart.c
+    dvh/shared/src/utils_shell.c
 
-    select/lab_registry.c
-    select/lab_select.c
+    dvh/select/lab_registry.c
+    dvh/select/lab_select.c
 
-    labs/00_swd/lab_swd.c
-    labs/01_uart/lab_uart.c
-    labs/01_uart/lab_uart_data.c
-    labs/01_uart/lab_uart_commands.c
-    labs/02_i2c/lab_i2c.c
+    dvh/labs/00_swd/lab_swd.c
+    dvh/labs/01_uart/lab_uart.c
+    dvh/labs/01_uart/lab_uart_data.c
+    dvh/labs/01_uart/lab_uart_commands.c
+    dvh/labs/02_i2c/lab_i2c.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
-    shared/include
-    select
-    labs
+    dvh/shared/include
+    dvh/select
+    dvh/labs
 )
 
 # Add project symbols (macros)
