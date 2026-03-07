@@ -21,8 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "lab_select.h"
-#include "lab_registry.h"
+#include "lab_bootstrap.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -104,40 +103,9 @@ int main(void)
   //MX_SPI1_Init(); // WARNING : This line is commented out on DVH 0.1 to repurpose SPI pins as GPIOs
   MX_USART1_UART_Init();
   MX_USB_PCD_Init();
-  /* USER CODE BEGIN 2 */
-  LabSelect_Init(); // WARNING: DVH 0.1 GPIO init
-  HAL_Delay(100);
 
-  uint8_t lab_id = LabSelect_Read();
-  LabSelect_Blink(lab_id);
-  ILab* lab = LabRegistry_GetById(lab_id);
-
-  if (lab == NULL) {
-    while (1) {
-      // Unable to load a lab, LED on to display idle state
-      HAL_GPIO_WritePin(DOOR_IN_GPIO_Port, DOOR_IN_Pin, GPIO_PIN_SET);
-      HAL_Delay(1000);
-    }
-  }
-
-  // TODO : implement reset button reading (and move logic out of here)
-  if (0) {
-    lab->reset();
-  }
-
-  lab->init();
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    lab->loop();
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+  /* USER CODE ENTRYPOINT */
+  LabBootstrap_Start();
 }
 
 /**
@@ -356,7 +324,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(RFID_RST_GPIO_Port, &GPIO_InitStruct);
+  //HAL_GPIO_Init(RFID_RST_GPIO_Port, &GPIO_InitStruct); // WARNING : This line is commented out on DVH 0.1 to repurpose this pin as input
 
   /*Configure GPIO pin : SPI_CS_Pin */
   GPIO_InitStruct.Pin = SPI_CS_Pin;
