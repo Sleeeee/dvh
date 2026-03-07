@@ -1,4 +1,5 @@
 #include "lab_i2c.h"
+#include "main.h"
 
 void Lab_I2C_Init(void) {
   // Nothing to do yet
@@ -9,7 +10,7 @@ void Lab_I2C_Loop(void) {
 }
 
 void Lab_I2C_Reset(void) {
-  // Nothing to do yet
+  HAL_Delay(2000);
 }
 
 ILab Lab_I2C = {

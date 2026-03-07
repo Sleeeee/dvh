@@ -1,9 +1,9 @@
 #include "lab_registry.h"
 #include <stddef.h>
 
-#include "00_swd/lab_swd.h"
-#include "01_uart/lab_uart.h"
-#include "02_i2c/lab_i2c.h"
+#include "lab_swd.h"
+#include "lab_uart.h"
+#include "lab_i2c.h"
 
 static ILab* labs[] = {
   &Lab_SWD,

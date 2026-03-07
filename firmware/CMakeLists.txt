@@ -53,22 +53,26 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     dvh/shared/src/utils_uart.c
     dvh/shared/src/utils_shell.c
 
-    dvh/select/lab_registry.c
-    dvh/select/lab_select.c
+    dvh/manager/src/lab_bootstrap.c
+    dvh/manager/src/lab_registry.c
+    dvh/manager/src/lab_select.c
+    dvh/manager/src/lab_blink.c
 
-    dvh/labs/00_swd/lab_swd.c
-    dvh/labs/01_uart/lab_uart.c
-    dvh/labs/01_uart/lab_uart_data.c
-    dvh/labs/01_uart/lab_uart_commands.c
-    dvh/labs/02_i2c/lab_i2c.c
+    dvh/labs/00_swd/src/lab_swd.c
+    dvh/labs/01_uart/src/lab_uart.c
+    dvh/labs/01_uart/src/lab_uart_data.c
+    dvh/labs/01_uart/src/lab_uart_commands.c
+    dvh/labs/02_i2c/src/lab_i2c.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     dvh/shared/include
-    dvh/select
-    dvh/labs
+    dvh/manager/include
+    dvh/labs/00_swd/include
+    dvh/labs/01_uart/include
+    dvh/labs/02_i2c/include
 )
 
 # Add project symbols (macros)

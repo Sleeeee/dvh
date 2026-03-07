@@ -2,6 +2,7 @@
 #define LAB_REGISTRY_H
 
 #include "ilab.h"
+#include <stdint.h>
 
 ILab* LabRegistry_GetById(uint8_t id);
 
