@@ -5,7 +5,7 @@
 
 void LabBlink_Selected(uint8_t count);
 
-void LabBlink_Not_Found(void);
+void LabBlink_Broken(void);
 
 void LabBlink_Reset(void);
 
