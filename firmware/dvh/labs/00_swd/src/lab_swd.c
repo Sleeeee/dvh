@@ -54,8 +54,9 @@ void Lab_SWD_Loop(void) {
   HAL_Delay(1000);
 }
 
-void Lab_SWD_Reset(void) {
+Lab_StatusTypeDef Lab_SWD_Reset(void) {
   // Nothing to do yet
+  return LAB_OK;
 }
 
 ILab Lab_SWD = {

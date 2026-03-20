@@ -10,7 +10,7 @@ void LabBlink_Selected(uint8_t count) {
   }
 }
 
-void LabBlink_Not_Found(void) {
+void LabBlink_Broken(void) {
   HAL_GPIO_WritePin(DOOR_IN_GPIO_Port, DOOR_IN_Pin, GPIO_PIN_SET);
   HAL_Delay(1000);
 }

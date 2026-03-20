@@ -2,6 +2,7 @@
 #include "lab_select.h"
 #include "lab_blink.h"
 #include "lab_registry.h"
+#include "ilab.h"
 #include "main.h"
 
 void LabBootstrap_Start(void) {
@@ -13,15 +14,14 @@ void LabBootstrap_Start(void) {
   ILab* lab = LabRegistry_GetById(lab_id);
 
   if (lab == NULL) {
-    while (1) {
-      // Unable to load a lab
-      LabBlink_Not_Found();
-    }
+    while (1) { LabBlink_Broken(); } // Unable to load a lab
   }
 
   if (LabSelect_Reset_Pressed()) {
     LabBlink_Reset();
-    lab->reset();
+    if (lab->reset() != LAB_OK) {
+      while (1) { LabBlink_Broken(); } // Lab reset failed
+    }
     LabBlink_Continue();
   }
 

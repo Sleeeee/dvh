@@ -108,8 +108,9 @@ void Lab_UART_Loop(void) {
   Utils_Shell_Start("[root@dvh]# ", COMMANDS_ROOT);
 }
 
-void Lab_UART_Reset(void) {
+Lab_StatusTypeDef Lab_UART_Reset(void) {
   // Nothing to do yet
+  return LAB_OK;
 }
 
 ILab Lab_UART = {
