@@ -52,6 +52,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     dvh/shared/src/utils_secrets.c
     dvh/shared/src/utils_uart.c
     dvh/shared/src/utils_shell.c
+    dvh/shared/src/utils_eeprom.c
 
     dvh/manager/src/lab_bootstrap.c
     dvh/manager/src/lab_registry.c
