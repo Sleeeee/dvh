@@ -3,14 +3,10 @@
 
 #include "utils_shell.h"
 
-ShellStatus Lab_UART_Cmd_Echo(char* args);
-ShellStatus Lab_UART_Cmd_Clear(char* args);
-ShellStatus Lab_UART_Cmd_GetUsers(char* args);
-ShellStatus Lab_UART_Cmd_Login(char* args);
+Utils_Shell_StatusTypeDef Lab_UART_Cmd_GetUsers(char* args);
+Utils_Shell_StatusTypeDef Lab_UART_Cmd_Login(char* args);
 
-ShellStatus Lab_UART_Cmd_UserDb(char* args);
-ShellStatus Lab_UART_Cmd_Root(char* args);
-
-ShellStatus Lab_UART_Cmd_Reboot(char* args);
+Utils_Shell_StatusTypeDef Lab_UART_Cmd_UserDb(char* args);
+Utils_Shell_StatusTypeDef Lab_UART_Cmd_Root(char* args);
 
 #endif

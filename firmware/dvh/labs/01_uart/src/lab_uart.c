@@ -1,6 +1,5 @@
 #include "lab_uart.h"
 #include "lab_uart_data.h"
-#include "lab_uart_commands.h"
 #include "utils_uart.h"
 #include "utils_shell.h"
 #include "utils_secrets.h"
@@ -8,18 +7,6 @@
 #include <string.h>
 
 extern UART_HandleTypeDef huart1;
-
-void Lab_UART_Transmit_Flag(const unsigned char* flag, int len) {
-  char decrypted_flag[64];
-  Utils_Secrets_Decrypt(flag, len, decrypted_flag, sizeof(decrypted_flag));
-
-  char output[128];
-  snprintf(output, sizeof(output), "[DVH] Here, take this: %s\r\n", decrypted_flag);
-  Utils_UART_Writeline(output);
-
-  memset(decrypted_flag, 0, sizeof(decrypted_flag));
-  memset(output, 0, sizeof(output));
-}
 
 void Lab_UART_Boot_Sequence(const char* username, const unsigned char* pass, int len) {
   // Useless system logs
@@ -57,32 +44,6 @@ void Lab_UART_Boot_Sequence(const char* username, const unsigned char* pass, int
   Utils_UART_Writeline("[BOOT] Boot sequence finished. Press [ENTER] to start the shell.\r\n");
 }
 
-static const ShellCommand COMMANDS_ANONYMOUS[] = {
-  {"echo", Lab_UART_Cmd_Echo, "Echo text back to the terminal"},
-  {"clear", Lab_UART_Cmd_Clear, "Clear the terminal"},
-  {"get_users", Lab_UART_Cmd_GetUsers, "Fetch the list of existing users"},
-  {"login", Lab_UART_Cmd_Login, "Log in as an existing user"},
-  {NULL, NULL, NULL}
-};
-
-static const ShellCommand COMMANDS_USER[] = {
-  {"echo", Lab_UART_Cmd_Echo, "Echo text back to the terminal"},
-  {"clear", Lab_UART_Cmd_Clear, "Clear the terminal"},
-  {"get_users", Lab_UART_Cmd_GetUsers, "Fetch the list of existing users"},
-  {"user_db", Lab_UART_Cmd_UserDb, "Manage the internal user database"},
-  {"root", Lab_UART_Cmd_Root, "Log in as root"},
-  {NULL, NULL, NULL}
-};
-
-static const ShellCommand COMMANDS_ROOT[] = {
-  {"echo", Lab_UART_Cmd_Echo, "Echo text back to the terminal"},
-  {"clear", Lab_UART_Cmd_Clear, "Clear the terminal"},
-  {"get_users", Lab_UART_Cmd_GetUsers, "Fetch the list of existing users"},
-  {"user_db", Lab_UART_Cmd_UserDb, "Manage the internal user database"},
-  {"reboot", Lab_UART_Cmd_Reboot, "Reboot the shell"},
-  {NULL, NULL, NULL}
-};
-
 void Lab_UART_Init(void) {
   // Nothing to do yet
 }
@@ -96,16 +57,16 @@ void Lab_UART_Loop(void) {
 
   // Loop user in anonymous shell until SHELL_EXIT (login)
   Utils_UART_Writeline("[DVH] Welcome to the UART shell !\r\n");
-  Lab_UART_Transmit_Flag(LAB_UART_FLAG_ONE, LAB_UART_FLAG_ONE_LEN);
-  Utils_Shell_Start("[anonymous@dvh]$ ", COMMANDS_ANONYMOUS);
+  Utils_Secrets_Transmit_Flag(LAB_UART_FLAG_ONE, LAB_UART_FLAG_ONE_LEN);
+  Utils_Shell_Start("[anonymous@dvh]$ ", LAB_UART_COMMANDS_ANONYMOUS);
 
   // Loop user in user shell until SHELL_EXIT (root)
-  Lab_UART_Transmit_Flag(LAB_UART_FLAG_TWO, LAB_UART_FLAG_TWO_LEN);
-  Utils_Shell_Start("[monitoring_svc@dvh]$ ", COMMANDS_USER);
+  Utils_Secrets_Transmit_Flag(LAB_UART_FLAG_TWO, LAB_UART_FLAG_TWO_LEN);
+  Utils_Shell_Start("[monitoring_svc@dvh]$ ", LAB_UART_COMMANDS_USER);
 
   // Loop user in root shell until SHELL_EXIT (reboot)
-  Lab_UART_Transmit_Flag(LAB_UART_FLAG_THREE, LAB_UART_FLAG_THREE_LEN);
-  Utils_Shell_Start("[root@dvh]# ", COMMANDS_ROOT);
+  Utils_Secrets_Transmit_Flag(LAB_UART_FLAG_THREE, LAB_UART_FLAG_THREE_LEN);
+  Utils_Shell_Start("[root@dvh]# ", LAB_UART_COMMANDS_ROOT);
 }
 
 Lab_StatusTypeDef Lab_UART_Reset(void) {
