@@ -20,17 +20,17 @@ void Utils_UART_ReceiveEnter(void) {
   }
 }
 
-int Utils_UART_Readchar(char* buffer, uint8_t rx, uint16_t* idx, uint16_t max_len, EchoMode mode) {
+Utils_UART_StatusTypeDef Utils_UART_Readchar(char* buffer, uint8_t rx, uint16_t* idx, uint16_t max_len, Utils_UART_EchoModeTypeDef mode) {
   if (rx == '\r' || rx == '\n') {
     // Handle [ENTER] : send carriage return + newline and exit function
     HAL_UART_Transmit(&huart1, (uint8_t*)"\r\n", 2, 10);
     buffer[*idx] = '\0';
-    return 1;
+    return UTILS_UART_EXIT;
 
   } else if (rx == '\b' || rx == 0x7f) {
     // Handle [BACKSPACE] : delete character (effectively move back and overwrite the character with a whitespace)
     if (*idx > 0) {
-      if (mode != ECHO_SILENT) {
+      if (mode != UTILS_UART_ECHO_SILENT) {
         HAL_UART_Transmit(&huart1, (uint8_t*)"\b \b", 3, 10);
       }
       (*idx)--;
@@ -39,18 +39,18 @@ int Utils_UART_Readchar(char* buffer, uint8_t rx, uint16_t* idx, uint16_t max_le
   } else if (*idx < (max_len - 1)) {
     if (rx >= ' ' && rx <= '~') {
       // Accept ASCII-printable character (between ' ' / 0x20 and '~' / 0x7e)
-      if (mode == ECHO_NORMAL) {
+      if (mode == UTILS_UART_ECHO_NORMAL) {
         HAL_UART_Transmit(&huart1, (uint8_t*)&rx, 1, 10);
-      } else if (mode == ECHO_MASKED) {
+      } else if (mode == UTILS_UART_ECHO_MASKED) {
         HAL_UART_Transmit(&huart1, (uint8_t*)"*", 1, 10);
       }
       buffer[(*idx)++] = rx;
     }
   }
-  return 0;
+  return UTILS_UART_CONTINUE;
 }
 
-void Utils_UART_Readline_Ex(char* buffer, uint16_t max_len, EchoMode mode) {
+void Utils_UART_Readline_Ex(char* buffer, uint16_t max_len, Utils_UART_EchoModeTypeDef mode) {
   uint8_t rx;
   uint16_t idx = 0;
 
@@ -59,9 +59,27 @@ void Utils_UART_Readline_Ex(char* buffer, uint16_t max_len, EchoMode mode) {
   while (1) {
     // Receive characters one by one
     if (HAL_UART_Receive(&huart1, &rx, 1, 100) == HAL_OK) {
-      if (Utils_UART_Readchar(buffer, rx, &idx, max_len, mode) == 1) {
+      if (Utils_UART_Readchar(buffer, rx, &idx, max_len, mode) == UTILS_UART_EXIT) {
         return;
       }
+    }
+  }
+}
+
+Utils_UART_ConfirmationTypeDef Utils_UART_ReadConfirmation(char* prompt) {
+  uint8_t rx;
+  Utils_UART_Writeline(prompt);
+
+  while (1) {
+    if (HAL_UART_Receive(&huart1, &rx, 1, 100) == HAL_OK) {
+      HAL_UART_Transmit(&huart1, &rx, 1, 10);
+      Utils_UART_Writeline("\r\n");
+
+      if ((rx == 'y') || (rx == 'Y')) { return UTILS_UART_CONFIRMED; }
+      if ((rx == 'n') || (rx == 'N')) { return UTILS_UART_DENIED; }
+
+      Utils_UART_Writeline("Unrecognized input. ");
+      Utils_UART_Writeline(prompt);
     }
   }
 }

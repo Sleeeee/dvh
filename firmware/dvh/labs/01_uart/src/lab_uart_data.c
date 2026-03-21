@@ -1,4 +1,6 @@
 #include "lab_uart_data.h"
+#include "lab_uart_commands.h"
+#include <stddef.h>
 
 // DVH{1ns1d3_th3_syst3m_be8811624e}
 const unsigned char LAB_UART_FLAG_ONE[] = {0x2e, 0x23, 0x3b, 0x0f, 0x58, 0x00, 0x19, 0x44, 0x17, 0x47, 0x36, 0x1a, 0x02, 0x46, 0x2c, 0x07, 0x10, 0x1d, 0x1e, 0x46, 0x1e, 0x2b, 0x0b, 0x0b, 0x52, 0x4d, 0x42, 0x45, 0x5f, 0x5c, 0x5e, 0x10, 0x0e};
@@ -31,3 +33,29 @@ const int LAB_UART_ROOT_PASSWORD_LEN = sizeof(LAB_UART_ROOT_PASSWORD);
 // $7$CU..../....rK8bQeEo4llTno3mQt7tL1$Ujrei6P0msD.n0YyD47IEcdWoJEVjEiT3xx3FKi0aqC
 const unsigned char LAB_UART_ROOT_HASH[] = {0x4e, 0x42, 0x57, 0x37, 0x3c, 0x40, 0x44, 0x5b, 0x5d, 0x5b, 0x47, 0x40, 0x44, 0x5b, 0x01, 0x3f, 0x51, 0x0c, 0x3b, 0x10, 0x36, 0x1b, 0x5d, 0x02, 0x06, 0x21, 0x1d, 0x1b, 0x5a, 0x03, 0x3b, 0x01, 0x44, 0x00, 0x25, 0x5f, 0x4e, 0x20, 0x19, 0x06, 0x0c, 0x07, 0x5c, 0x25, 0x43, 0x19, 0x1a, 0x2a, 0x44, 0x1b, 0x43, 0x2d, 0x10, 0x2a, 0x5e, 0x42, 0x3a, 0x31, 0x0a, 0x0a, 0x3d, 0x1a, 0x39, 0x31, 0x3f, 0x04, 0x2f, 0x1c, 0x27, 0x47, 0x11, 0x16, 0x59, 0x33, 0x38, 0x1d, 0x59, 0x0f, 0x1b, 0x36};
 const int LAB_UART_ROOT_HASH_LEN = sizeof(LAB_UART_ROOT_HASH);
+
+const Utils_Shell_Command LAB_UART_COMMANDS_ANONYMOUS[] = {
+  {"echo", Utils_Shell_Cmd_Echo, "Echo text back to the terminal"},
+  {"clear", Utils_Shell_Cmd_Clear, "Clear the terminal"},
+  {"get_users", Lab_UART_Cmd_GetUsers, "Fetch the list of existing users"},
+  {"login", Lab_UART_Cmd_Login, "Log in as an existing user"},
+  {NULL, NULL, NULL}
+};
+
+const Utils_Shell_Command LAB_UART_COMMANDS_USER[] = {
+  {"echo", Utils_Shell_Cmd_Echo, "Echo text back to the terminal"},
+  {"clear", Utils_Shell_Cmd_Clear, "Clear the terminal"},
+  {"get_users", Lab_UART_Cmd_GetUsers, "Fetch the list of existing users"},
+  {"user_db", Lab_UART_Cmd_UserDb, "Manage the internal user database"},
+  {"root", Lab_UART_Cmd_Root, "Log in as root"},
+  {NULL, NULL, NULL}
+};
+
+const Utils_Shell_Command LAB_UART_COMMANDS_ROOT[] = {
+  {"echo", Utils_Shell_Cmd_Echo, "Echo text back to the terminal"},
+  {"clear", Utils_Shell_Cmd_Clear, "Clear the terminal"},
+  {"get_users", Lab_UART_Cmd_GetUsers, "Fetch the list of existing users"},
+  {"user_db", Lab_UART_Cmd_UserDb, "Manage the internal user database"},
+  {"reboot", Utils_Shell_Cmd_Reboot, "Reboot the shell"},
+  {NULL, NULL, NULL}
+};

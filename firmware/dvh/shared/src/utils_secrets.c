@@ -1,4 +1,6 @@
 #include "utils_secrets.h"
+#include "utils_uart.h"
+#include <stdio.h>
 #include <string.h>
 
 static const unsigned char XOR_KEY[] = {0x6a, 0x75, 0x73, 0x74, 0x69, 0x6e};
@@ -19,4 +21,16 @@ bool Utils_Secrets_Check_Password(const char* input, const unsigned char* secret
   bool match = (strcmp(input, decrypted_secret) == 0);
   memset(decrypted_secret, 0, sizeof(decrypted_secret));
   return match;
+}
+
+void Utils_Secrets_Transmit_Flag(const unsigned char* flag, int len) {
+  char decrypted_flag[64];
+  Utils_Secrets_Decrypt(flag, len, decrypted_flag, sizeof(decrypted_flag));
+
+  char output[128];
+  snprintf(output, sizeof(output), "[DVH] Here, take this: %s\r\n", decrypted_flag);
+  Utils_UART_Writeline(output);
+
+  memset(decrypted_flag, 0, sizeof(decrypted_flag));
+  memset(output, 0, sizeof(output));
 }

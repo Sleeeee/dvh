@@ -1,6 +1,8 @@
 #ifndef LAB_UART_DATA_H
 #define LAB_UART_DATA_H
 
+#include "utils_shell.h"
+
 extern const unsigned char LAB_UART_FLAG_ONE[];
 extern const int LAB_UART_FLAG_ONE_LEN;
 
@@ -21,5 +23,9 @@ extern const unsigned char LAB_UART_ROOT_PASSWORD[];
 extern const int LAB_UART_ROOT_PASSWORD_LEN;
 extern const unsigned char LAB_UART_ROOT_HASH[];
 extern const int LAB_UART_ROOT_HASH_LEN;
+
+extern const Utils_Shell_Command LAB_UART_COMMANDS_ANONYMOUS[];
+extern const Utils_Shell_Command LAB_UART_COMMANDS_USER[];
+extern const Utils_Shell_Command LAB_UART_COMMANDS_ROOT[];
 
 #endif
