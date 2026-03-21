@@ -16,7 +16,7 @@ Also, it is important to note that the screenshots may have been taken on a prev
 
 If this has not been done yet, we will install and configure OpenOCD, as explained [here](../../tools/flash.md). We will not dive into much explanation here, but feel free to read the dedicated document. You can install OpenOCD with `sudo apt install openocd` then paste this configuration into a file named `openocd.cfg` :
 
-```
+```bash
 # Source debugprobe interface config file
 source /usr/share/openocd/scripts/interface/cmsis-dap.cfg
 transport select swd
@@ -30,11 +30,15 @@ adapter speed 5000
 
 We can now wire the [Debugprobe](../../tools/debugprobe.md) to the SWD interface of DVH board. They need three wires as mentioned before, SWDCLK, SWDIO and a common ground :
 
+<div align="center">
+
 | DVH    | Pico |
 |--------|------|
 | SWDCLK | GP2  |
 | SWDIO  | GP3  |
 | GND    | GND  |
+
+</div>
 
 You may need to take a look at the pinout for both the DVH board and the [Raspberry Pi Pico](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html).
 
@@ -48,7 +52,7 @@ Once you have set up the boards, you can power them on, while connecting the deb
 
 In order to dump the firmware, we can execute this OpenOCD command :
 
-```
+```bash
 openocd -f openocd.cfg -c "init; reset halt; dump_image firmware.bin 0x08000000 0x10000; exit"
 ```
 
@@ -56,7 +60,7 @@ This command initiates a connection with the STM32 chip, tells it to reset and f
 
 If the dumping executed successfully, you should see a new file `firmware.bin` in your working directory, as well as a similar output tail :
 
-```
+```bash
 [stm32f1x.cpu] halted due to debug-request, current mode: Thread
 xPSR: 0x01000000 pc: 0x08000544 msp: 0x20005000
 ```
@@ -71,7 +75,7 @@ Now that we have extracted the firmware, we can use a couple command line tools 
 
 The first tool is the `file` utility. It prints out interesting pieces of information, such at the processor infrastructure and interesting addresses (exception vector table).
 
-```
+```bash
 $ file firmware.bin
 firmware.bin: ARM Cortex-M firmware, initial SP at 0x20005000, reset at 0x08000544, NMI at 0x08000368, HardFault at 0x0800036a, SVCall at 0x08000372, PendSV at 0x08000376
 ```
@@ -82,7 +86,7 @@ As you can see in this output, the architecture is `ARM Cortex-M` and for exampl
 
 We can also use another interesting utility to gather more information on our binary file, the `strings` command. This tool will read the binary data, and print out the ASCII characters that it finds. Since the firmware is machine code, most of it will be gibberish, but you will often encounter some interesting strings :
 
-```
+```bash
 $ strings firmware.bin
 L#x3
 iQHB
@@ -92,7 +96,7 @@ iQHB
 
 There will often be random characters because occasionnally, hexadecimal values in the machine code will actually form strings. By default, `strings` prints any sequence of at least 4 characters, but to filter some of the randomness, we can manually set a higher threshold :
 
-```
+```bash
 $ strings -n 10 firmware.bin
 FpGDVH{...............................}
 ```

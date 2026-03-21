@@ -11,7 +11,7 @@ This document will guide you through setting up the environment required to deve
 
 Building the firmware from source requires multiple dependencies, such as a software building system (`cmake`), a cross-compiler that can build ARM machine code (`gcc-arm-none-eabi`) and a multi-architecture debugging server (`gdb-multiarch`) :
 
-```
+```bash
 sudo apt update
 sudo apt install cmake build-essential gcc-arm-none-eabi libnewlib-arm-none-eabi gdb-multiarch usbutils
 ```
@@ -43,7 +43,7 @@ Once this is taken care of, we can head on to the `Clock Configuration` tab. It 
 
 The last thing is to configure the project settings under the `Project Manager` tab. There is not much to do, I personally named the project `firmware` (top-level subfolder of this repository), and chose the CMake toolchain option. Everything is now set up, and you can click the `Generate code` button on the top right, and as mentioned previously, STM32CubeMX will generate all the boilerplate code required to start developing.
 
-> I chose to develop using neovim and to build the firmware with CMake because it fits my personal workflow best. Do note that STMicroelectronics have developed an Eclipse IDE fork called [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html) to provide a fully integrated development environment, but we will not be using that in this toolchain.
+> I chose to develop using neovim and to build the firmware with CMake because it fits my personal workflow best. Do note that STMicroelectronics have developed an Eclipse IDE fork called [STM32CubeIDE](https://www.st.com/en/development-tools/stm32cubeide.html) to provide a fully integrated development environment, but we will not be using that in this toolchain. A [VSCode extension](https://marketplace.visualstudio.com/items?itemName=stmicroelectronics.stm32-vscode-extension) is also available.
 
 ## Develop
 
@@ -53,7 +53,7 @@ You are now ready to write code for DVH ! This step will not be covered in this 
 
 Once you have finished writing code for the DVH board, you can use the preconfigured toolchain and run these two commands from inside the `firmware/` directory to build both `.elf` and `.bin` binaries :
 
-```
+```bash
 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/gcc-arm-none-eabi.cmake
 cmake --build build
 ```
@@ -68,7 +68,7 @@ The firmware will be in the `firmware/build/` location. There should be two bina
 
 Once you have configured OpenOCD and wire the debugger to the DVH board, you can use the custom `flash` target from CMake, which is executed with a simple command :
 
-```
+```bash
 cmake --build build --target flash
 ```
 
