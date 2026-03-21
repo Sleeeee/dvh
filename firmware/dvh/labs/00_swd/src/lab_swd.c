@@ -40,12 +40,14 @@ void Lab_SWD_Solve_Flag_Three(const unsigned char* flag, int len, volatile char*
   buffer[len] = '\0';
 }
 
-void Lab_SWD_Init(void) {
+Lab_StatusTypeDef Lab_SWD_Init(void) {
   volatile char lab_swd_buffer[64];
 
   Lab_SWD_Solve_Flag_One(LAB_SWD_FLAG_ONE, lab_swd_buffer);
   Lab_SWD_Solve_Flag_Two(LAB_SWD_FLAG_TWO, sizeof(LAB_SWD_FLAG_TWO), lab_swd_buffer);
   Lab_SWD_Solve_Flag_Three(LAB_SWD_FLAG_THREE, sizeof(LAB_SWD_FLAG_THREE), lab_swd_buffer);
+
+  return LAB_OK;
 }
 
 void Lab_SWD_Loop(void) {

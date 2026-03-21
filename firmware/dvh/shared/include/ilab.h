@@ -13,7 +13,7 @@ typedef struct {
   uint8_t id;
   const char* name;
 
-  void (*init)(void);
+  Lab_StatusTypeDef (*init)(void);
   void (*loop)(void);
   Lab_StatusTypeDef (*reset)(void);
 } ILab;

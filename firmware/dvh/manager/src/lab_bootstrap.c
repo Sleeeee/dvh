@@ -25,7 +25,10 @@ void LabBootstrap_Start(void) {
     LabBlink_Continue();
   }
 
-  lab->init();
+  if (lab->init() != LAB_OK) {
+    while (1) { LabBlink_Broken(); } // Lab init failed
+  }
+
   while (1) {
     lab->loop();
   }

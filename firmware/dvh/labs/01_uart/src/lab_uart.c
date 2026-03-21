@@ -44,8 +44,9 @@ void Lab_UART_Boot_Sequence(const char* username, const unsigned char* pass, int
   Utils_UART_Writeline("[BOOT] Boot sequence finished. Press [ENTER] to start the shell.\r\n");
 }
 
-void Lab_UART_Init(void) {
+Lab_StatusTypeDef Lab_UART_Init(void) {
   // Nothing to do yet
+  return LAB_OK;
 }
 
 void Lab_UART_Loop(void) {
