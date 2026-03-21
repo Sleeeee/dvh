@@ -65,6 +65,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     dvh/labs/01_uart/src/lab_uart_commands.c
     dvh/labs/02_i2c/src/lab_i2c.c
     dvh/labs/02_i2c/src/lab_i2c_data.c
+    dvh/labs/02_i2c/src/lab_i2c_commands.c
 )
 
 # Add include paths
