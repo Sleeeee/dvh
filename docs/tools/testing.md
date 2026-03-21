@@ -10,7 +10,7 @@ The code for DVH includes Unity tests to ensure a decent quality and functionali
 
 Since each code module is meant to have its own Unity script, a bash script has been written to automate the testing process. It should be run from the `firmware/` directory, and provides a similar output :
 
-```
+```bash
 $ ./tests/unit/run_tests.sh
 Running unit tests...
 Compiling tests/unit/src/test_lab_swd.c...
@@ -34,13 +34,13 @@ For more complex, integrated system testing, [Renode](https://renode.readthedocs
 
 Because Renode does not simulate a complex hardware setup, we need to build appropriate firmware for the environment, which has been implemented with the `DSIMULATION` flag :
 
-```
+```bash
 cmake -B build_simulation -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/gcc-arm-none-eabi.cmake -DSIMULATION=ON
 ```
 
 The Renode testing workflow has also been automated in its own bash script, which should be run from the `firmware/` directory : 
 
-```
+```bash
 $ ./tests/renode/run_tests.sh
 Running Renode tests...
 Preparing suites

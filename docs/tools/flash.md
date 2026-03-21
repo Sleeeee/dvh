@@ -15,14 +15,14 @@ In order to move code to any circuit, you need to go through a process called fl
 
 There are several required steps to have a working flashing environment. First is to install [OpenOCD](https://openocd.org/pages/getting-openocd.html), which is the software that will allow us to communicate with the boards :
 
-```
+```bash
 sudo apt update
 sudo apt install openocd
 ```
 
 Once this is done, we need to create a configuration file for our setup. Please make sure that `/usr/share/openocd/scripts/interface/cmsis-dap.cfg` and `/usr/share/openocd/scripts/target/stm32f1x.cfg` do exist on your file system. If you are on Windows, you will need to modify those paths. Here is the configuration that we can write to a file named `openocd.cfg` :
 
-```
+```bash
 # Source debugprobe interface config file
 source /usr/share/openocd/scripts/interface/cmsis-dap.cfg
 transport select swd
@@ -44,11 +44,15 @@ Depending on the lab you want to practice on, you will be prompted to download a
 
 You will now need to connect the debugger to the DVH board using its SWD (Serial Wire Debug) interface. You only need three pins to be connected, SWDCLK, SWDIO, and a common ground. Here is a valid pinout for the connection using the Pico debugprobe :
 
+<div align="center">
+
 | DVH    | Pico |
 |--------|------|
 | SWDCLK | GP2  |
 | SWDIO  | GP3  |
 | GND    | GND  |
+
+</div>
 
 You may need to take a look at the pinout for both the DVH board and the [Raspberry Pi Pico](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html).
 
@@ -62,7 +66,7 @@ Once this is done, you can power on both boards, while connecting the debugger t
 
 The DVH board is now ready to be flashed. From your dedicated directory, execute this command, changing filenames if needed :
 
-```
+```bash
 openocd -f openocd.cfg -c "program firmware.bin 0x08000000 verify reset exit"
 ```
 

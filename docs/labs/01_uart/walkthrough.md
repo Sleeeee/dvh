@@ -10,11 +10,15 @@ Before starting the lab, you will need to have a functional [Debugprobe](../../t
 
 We will have to connect the DVH board's UART interface with the corresponding Raspberry Pi Pico to allow them to communicate accordingly :
 
+<div align="center">
+
 | DVH     | Pico |
 |---------|------|
 | UART_RX | GP4  |
 | UART_TX | GP5  |
 | GND     | GND  |
+
+</div>
 
 You may need to take a look at the pinout for both the DVH board and the [Raspberry Pi Pico](https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html). As per UART standards, a circuit sends data through its `TX` pin, which is received by the other circuit on its `RX` pin.
 
@@ -28,7 +32,7 @@ You may need to take a look at the pinout for both the DVH board and the [Raspbe
 
 In order to establish a serial communication over UART, we will start by installing `minicom` :
 
-```
+```bash
 sudo apt install minicom
 ```
 
@@ -36,7 +40,7 @@ sudo apt install minicom
 
 You can now power on the Pico and the DVH board, then open the serial port using `minicom` :
 
-```
+```bash
 minicom -b 115200 -o -D /dev/ttyACM0
 ```
 
@@ -108,7 +112,7 @@ Unfortunately, we were not able to retrieve plain passwords, but we managed to g
 
 By inspecting the hash format, we can see it is formatted like a [Linux password](https://man7.org/linux/man-pages/man3/crypt.3.html), which typically looks like this :
 
-```
+```bash
 $id$salt$hashed
 ```
 
@@ -116,14 +120,14 @@ From there, we can identify the hashing function corresponding to ID 7. Accordin
 
 Unfortunately, unlike some obsolete hashing functions like MD5, `scrypt` is considered safe and cannot be broken. However, even if we cannot reverse the hash, nothing is preventing us from brute-forcing it, by computing the hash for common passwords and seeing if any of them matches ! To help us with that, we will swap over to our Linux machine and install John The Ripper, a handy password cracking tool :
 
-```
+```bash
 sudo apt update
 sudo apt install john
 ```
 
 John expects hashes to be inside a file, so we can paste our hash into a new `hash.txt` file (you will need to escape the `$` signs by placing a `\` before each of them). We also know the hashing function is `scrypt`. The only thing that is left is to find a wordlist, containing common passwords that will be tested against the hash. The one we will use is one of the most famous wordlists, which comes from a huge data breach from [RockYou](https://github.com/zacheller/rockyou) :
 
-```
+```bash
 wget https://raw.githubusercontent.com/zacheller/rockyou/master/rockyou.txt.tar.gz
 tar -xzvf rockyou.txt.tar.gz
 ```
