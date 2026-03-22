@@ -8,7 +8,7 @@ In order to move code to any circuit, you need to go through a process called fl
 - DVH board
 - Debugger ([debugprobe Pico](debugprobe.md), ST-Link or something else)
 - Micro-USB cable and 5-12V power supply
-- Micro-USB to USB/USB-C cable (depending on your computer's ports)
+- Micro-USB to USB/USB-C cable (depending on available ports)
 - 3 Dupont cables (recommended) or regular wires
 
 ## Install and configure OpenOCD

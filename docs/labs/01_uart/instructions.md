@@ -14,7 +14,7 @@ Below is a check list of all the tools and skills that you need in order to perf
 - DVH board with latest firmware (if not, you will need to [flash](../../tools/flash.md) it).
 - UART bridge ([debugprobe](../../tools/debugprobe.md) for example)
 - Micro-USB cable and 5-12V power supply
-- Micro-USB to USB/USB-C cable (depending on your computer's ports)
+- Micro-USB to USB/USB-C cable (depending on available ports)
 - 3 Dupont cables (recommended) or regular wires
 
 ### Software
