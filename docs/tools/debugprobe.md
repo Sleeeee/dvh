@@ -1,4 +1,4 @@
-# Setting up the Raspberry Pi Pico as a debugger with Debugprobe
+# Setting up the Raspberry Pi Pico as a debugger
 
 Debuggers are very powerful tools that are commonly used in hardware development and hacking. It allows engineers and attackers to debug, capture and interact with serial interfaces from embedded devices. There are a lot of existing tools that can function as debuggers to program and interact with circuits, for example the ST-Link that is tailored for STM32 chips (the DVH board's main MCU). However, for logistical reasons, it is easier for us to repurpose a Raspberry Pi Pico board into a functional debugger.
 
@@ -8,7 +8,7 @@ Raspberry Pi have developed open firmware for debugging, available for both thei
 
 - Computer
 - Raspberry Pi Pico
-- Micro-USB to USB/USB-C cable (depending on your computer's ports)
+- Micro-USB to USB/USB-C cable (depending on available ports)
 
 ## Download firmware
 

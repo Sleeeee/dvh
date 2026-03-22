@@ -2,6 +2,10 @@
 
 ## Overview
 
+This is a complete walkthrough of the UART lab, that is meant to guide you through every step of the way. You can read through this document to perform the lab, but for educational purposes, it is strongly suggested to use the [instructions](./instructions.md) as a main roadmap, and come back here whenever you feel stuck or need a sanity check.
+
+> By this point, I assume that you have read through the instructions and understood the goal of this lab.
+
 ## Walkthrough
 
 ### Set up
