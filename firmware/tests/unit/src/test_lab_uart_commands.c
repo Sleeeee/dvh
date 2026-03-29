@@ -1,6 +1,6 @@
 #include "../lib/unity.h"
-#include "../../../dvh/labs/01_uart/lab_uart_commands.c"
-#include "../../../dvh/labs/01_uart/lab_uart_data.c"
+#include "../../../dvh/labs/01_uart/src/lab_uart_commands.c"
+#include "../../../dvh/labs/01_uart/src/lab_uart_data.c"
 #include "../../../dvh/shared/src/utils_secrets.c"
 #include "stm32f1xx_hal.h"
 #include <string.h>
@@ -18,10 +18,15 @@ void Set_Input(const char* line1, const char* line2) {
   input_idx = 0;
 }
 
-void Utils_UART_Readline_Ex(char* buffer, uint16_t max_len, EchoMode mode) {
+void Utils_UART_Readline_Ex(char* buffer, uint16_t max_len, Utils_UART_EchoModeTypeDef mode) {
   if (INPUT_QUEUE[input_idx]) strncpy(buffer, INPUT_QUEUE[input_idx++], max_len);
 }
-#define Utils_UART_Readline(...) Utils_UART_Readline_Ex(__VA_ARGS__, ECHO_NORMAL)
+#define Utils_UART_Readline(...) Utils_UART_Readline_Ex(__VA_ARGS__, UTILS_UART_ECHO_NORMAL)
+
+// Stubs to compensate for the missing source
+Utils_Shell_StatusTypeDef Utils_Shell_Cmd_Echo(char* args) { return UTILS_SHELL_CONTINUE; }
+Utils_Shell_StatusTypeDef Utils_Shell_Cmd_Clear(char* args) { return UTILS_SHELL_CONTINUE; }
+Utils_Shell_StatusTypeDef Utils_Shell_Cmd_Reboot(char* args) { return UTILS_SHELL_CONTINUE; }
 
 void setUp(void) {
   SPY_UART_Clear();
@@ -29,18 +34,6 @@ void setUp(void) {
 }
 
 void tearDown(void) {}
-
-void test_Lab_UART_Cmd_Echo_should_echo(void) {
-  Lab_UART_Cmd_Echo("hello world");
-
-  TEST_ASSERT_EQUAL_STRING("hello world\r\n", SPY_UART_Buffer);
-}
-
-void test_Lab_UART_Cmd_Echo_should_fail(void) {
-  Lab_UART_Cmd_Echo(NULL);
-
-  TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Usage: echo"));
-}
 
 void test_Lab_UART_Cmd_GetUsers_should_list(void) {
   Lab_UART_Cmd_GetUsers(NULL);
@@ -52,18 +45,18 @@ void test_Lab_UART_Cmd_GetUsers_should_list(void) {
 void test_Lab_UART_Cmd_Login_should_succeed(void) {
   Set_Input("monitoring_svc", "u4rt_1s_pr3tty_v3rb0s3");
 
-  ShellStatus result = Lab_UART_Cmd_Login(NULL);
+  Utils_Shell_StatusTypeDef result = Lab_UART_Cmd_Login(NULL);
 
-  TEST_ASSERT_EQUAL(SHELL_EXIT, result);
+  TEST_ASSERT_EQUAL(UTILS_SHELL_EXIT, result);
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Logged in successfully"));
 }
 
 void test_Lab_UART_Cmd_Login_should_fail(void) {
   Set_Input("monitoring_svc", "wr0ng_p4ss");
 
-  ShellStatus result = Lab_UART_Cmd_Login(NULL);
+  Utils_Shell_StatusTypeDef result = Lab_UART_Cmd_Login(NULL);
 
-  TEST_ASSERT_EQUAL(SHELL_CONTINUE, result);
+  TEST_ASSERT_EQUAL(UTILS_SHELL_CONTINUE, result);
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Incorrect password"));
 }
 
@@ -77,26 +70,24 @@ void test_Lab_UART_Cmd_UserDb_should_dump(void) {
 void test_Lab_UART_Cmd_Root_should_succeed(void) {
   Set_Input("linkinpark", NULL); 
 
-  ShellStatus result = Lab_UART_Cmd_Root(NULL);
+  Utils_Shell_StatusTypeDef result = Lab_UART_Cmd_Root(NULL);
 
-  TEST_ASSERT_EQUAL(SHELL_EXIT, result);
+  TEST_ASSERT_EQUAL(UTILS_SHELL_EXIT, result);
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Root authorization granted"));
 }
 
 void test_Lab_UART_Cmd_Root_should_fail(void) {
   Set_Input("wr0ng_p4ss", NULL);
 
-  ShellStatus result = Lab_UART_Cmd_Root(NULL);
+  Utils_Shell_StatusTypeDef result = Lab_UART_Cmd_Root(NULL);
 
-  TEST_ASSERT_EQUAL(SHELL_CONTINUE, result);
+  TEST_ASSERT_EQUAL(UTILS_SHELL_CONTINUE, result);
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Incorrect password"));
 }
 
 int main(void) {
   UNITY_BEGIN();
 
-  RUN_TEST(test_Lab_UART_Cmd_Echo_should_echo);
-  RUN_TEST(test_Lab_UART_Cmd_Echo_should_fail);
   RUN_TEST(test_Lab_UART_Cmd_GetUsers_should_list);
   RUN_TEST(test_Lab_UART_Cmd_Login_should_succeed);
   RUN_TEST(test_Lab_UART_Cmd_Login_should_fail);

@@ -5,7 +5,15 @@ TEST_DIR="tests/unit/src"
 BINARY="$TEST_DIR/test_binary"
 MOCK_DIR="tests/unit/mocks"
 
-INCLUDES="-I $MOCK_DIR -I Core/Inc -I dvh/shared/include"
+INCLUDES=(
+  "-I $MOCK_DIR"
+  "-I Core/Inc"
+  "-I dvh/shared/include"
+  "-I dvh/manager/include"
+  "-I dvh/labs/00_swd/include"
+  "-I dvh/labs/01_uart/include"
+  "-I dvh/labs/02_i2c/include"
+)
 MOCK_SOURCE="$MOCK_DIR/mock_hal_uart.c"
 
 if [ ! -d "$TEST_DIR" ]; then
@@ -22,7 +30,7 @@ for test_file in "$TEST_DIR"/*.c; do
   ((TOTAL_TESTS++))
   echo "Compiling $test_file..."
 
-  if ! gcc $INCLUDES -o "$BINARY" "$test_file" "$UNITY_SRC" "$MOCK_SOURCE"; then
+  if ! gcc ${INCLUDES[@]} -o "$BINARY" "$test_file" "$UNITY_SRC" "$MOCK_SOURCE"; then
     echo "Error: Compilation failed"
     ((FAILED_TESTS++))
     continue
