@@ -3,6 +3,10 @@
 #include <string.h>
 #include <stdbool.h>
 
+void Utils_UART_Writeline(const char* text) {
+  strncat(SPY_UART_Buffer, text, sizeof(SPY_UART_Buffer) - strlen(SPY_UART_Buffer) - 1);
+}
+
 void setUp(void) {}
 
 void tearDown(void) {}
@@ -45,6 +49,16 @@ void test_Utils_Secrets_Check_Password_should_fail(void) {
   TEST_ASSERT_FALSE(result);
 }
 
+void test_Utils_Secrets_Transmit_Flag_should_transmit(void) {
+  char buffer[64];
+  const unsigned char mock_secret_encrypted[] = {0x2e, 0x23, 0x3b, 0x0f, 0x04, 0x5e, 0x09, 0x1e, 0x2c, 0x07, 0x5a, 0x0d, 0x18, 0x46, 0x07, 0x2b, 0x0f, 0x08, 0x0c, 0x13, 0x15, 0x12, 0x0f, 0x08, 0x0c, 0x13, 0x0e};
+  const char mock_output_plain[] = "[DVH] Here, take this: DVH{m0ck_s3cr3t_ffffffffff}\r\n";
+
+  Utils_Secrets_Transmit_Flag(mock_secret_encrypted, sizeof(mock_secret_encrypted));
+
+  TEST_ASSERT_EQUAL_STRING(mock_output_plain, SPY_UART_Buffer);
+}
+
 int main(void) {
   UNITY_BEGIN();
 
@@ -52,6 +66,7 @@ int main(void) {
   RUN_TEST(test_Utils_Secrets_Decrypt_should_not_overflow);
   RUN_TEST(test_Utils_Secrets_Check_Password_should_pass);
   RUN_TEST(test_Utils_Secrets_Check_Password_should_fail);
+  RUN_TEST(test_Utils_Secrets_Transmit_Flag_should_transmit);
 
   return UNITY_END();
 }

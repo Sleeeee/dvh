@@ -15,7 +15,7 @@ void test_Utils_UART_Readchar_should_echo(void) {
   char buffer[10];
   uint16_t idx = 0;
 
-  Utils_UART_Readchar(buffer, 'E', &idx, 10, ECHO_NORMAL);
+  Utils_UART_Readchar(buffer, 'E', &idx, 10, UTILS_UART_ECHO_NORMAL);
 
   TEST_ASSERT_EQUAL_CHAR('E', buffer[0]);
   TEST_ASSERT_EQUAL_INT(1, idx);
@@ -26,7 +26,7 @@ void test_Utils_UART_Readchar_should_silence(void) {
   char buffer[10];
   uint16_t idx = 0;
 
-  Utils_UART_Readchar(buffer, 'S', &idx, 10, ECHO_SILENT);
+  Utils_UART_Readchar(buffer, 'S', &idx, 10, UTILS_UART_ECHO_SILENT);
 
   TEST_ASSERT_EQUAL_CHAR('S', buffer[0]);
   TEST_ASSERT_EQUAL_INT(1, idx);
@@ -37,7 +37,7 @@ void test_Utils_UART_Readchar_should_mask(void) {
   char buffer[10];
   uint16_t idx = 0;
 
-  Utils_UART_Readchar(buffer, 'M', &idx, 10, ECHO_MASKED);
+  Utils_UART_Readchar(buffer, 'M', &idx, 10, UTILS_UART_ECHO_MASKED);
   TEST_ASSERT_EQUAL_CHAR('M', buffer[0]);
   TEST_ASSERT_EQUAL_STRING("*", SPY_UART_Buffer);
 }
@@ -46,8 +46,8 @@ void test_Utils_UART_Readchar_should_delete(void) {
   char buffer[10];
   uint16_t idx = 0;
 
-  Utils_UART_Readchar(buffer, 'D', &idx, 10, ECHO_NORMAL);
-  Utils_UART_Readchar(buffer, '\b', &idx, 10, ECHO_NORMAL);
+  Utils_UART_Readchar(buffer, 'D', &idx, 10, UTILS_UART_ECHO_NORMAL);
+  Utils_UART_Readchar(buffer, '\b', &idx, 10, UTILS_UART_ECHO_NORMAL);
 
   TEST_ASSERT_EQUAL_INT(0, idx);
   TEST_ASSERT_EQUAL_STRING("D\b \b", SPY_UART_Buffer);
@@ -57,7 +57,7 @@ void test_Utils_UART_Readchar_should_exit(void) {
   char buffer[10];
   uint16_t idx = 0;
 
-  int ret = Utils_UART_Readchar(buffer, '\r', &idx, 10, ECHO_NORMAL);
+  int ret = Utils_UART_Readchar(buffer, '\r', &idx, 10, UTILS_UART_ECHO_NORMAL);
 
   TEST_ASSERT_EQUAL_INT(1, ret);
   TEST_ASSERT_EQUAL_STRING("\r\n", SPY_UART_Buffer);
