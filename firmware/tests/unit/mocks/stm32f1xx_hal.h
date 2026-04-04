@@ -58,10 +58,14 @@ static inline void HAL_Delay(uint32_t Delay) {
   (void)Delay;
 }
 
+uint32_t HAL_GetTick(void);
+
 // UART mocks
 typedef struct {
   uint32_t dummy;
 } UART_HandleTypeDef;
+
+extern UART_HandleTypeDef huart1;
 
 typedef enum {
   HAL_OK = 0x00U,
@@ -73,7 +77,27 @@ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, ui
 
 extern char SPY_UART_Buffer[128];
 extern int SPY_UART_CallCount;
+extern HAL_StatusTypeDef SPY_I2C_Mock_Status;
 
 void SPY_UART_Clear(void);
+
+// I2C mocks
+typedef struct {
+  uint32_t dummy;
+} I2C_HandleTypeDef;
+
+extern I2C_HandleTypeDef hi2c2;
+
+#define I2C_MEMADD_SIZE_8BIT 0x00000001U
+#define VIRTUAL_EEPROM_SIZE 256
+static uint32_t mock_tick_counter = 0;
+
+void SPY_I2C_Clear(void);
+
+HAL_StatusTypeDef HAL_I2C_IsDeviceReady(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint32_t Trials, uint32_t Timeout);
+
+HAL_StatusTypeDef HAL_I2C_Mem_Read(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+
+HAL_StatusTypeDef HAL_I2C_Mem_Write(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout);
 
 #endif

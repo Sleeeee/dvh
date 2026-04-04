@@ -3,8 +3,6 @@
 #include "stm32f1xx_hal.h"
 #include <string.h>
 
-UART_HandleTypeDef huart1;
-
 void setUp(void) {
   SPY_UART_Clear();
 }

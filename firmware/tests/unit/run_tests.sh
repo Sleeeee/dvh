@@ -14,7 +14,7 @@ INCLUDES=(
   "-I dvh/labs/01_uart/include"
   "-I dvh/labs/02_i2c/include"
 )
-MOCK_SOURCE="$MOCK_DIR/mock_hal_uart.c"
+MOCK_SOURCE="$MOCK_DIR/mock_hal.c"
 
 if [ ! -d "$TEST_DIR" ]; then
   echo "Error: unable to find the test directory $TEST_DIR"
