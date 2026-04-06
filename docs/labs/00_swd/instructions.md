@@ -15,7 +15,7 @@ Below is a check list of all the tools and skills that you need in order to perf
 - Debugger ([debugprobe](../../tools/debugprobe.md), ST-Link or something else)
 - Micro-USB cable and 5-12V power supply
 - Micro-USB to USB/USB-C cable (depending on available ports)
-- 3 Dupont cables (recommended) or regular wires
+- Dupont cables (recommended) or regular wires
 
 ### Software
 
