@@ -34,7 +34,7 @@ Verify Lab UART
 
   # Verify
   Wait For Line On UART     Init Password:                    timeout=10
-  Wait For Line On UART     Press [ENTER] to start the shell
+  Wait For Line On UART     Press [ENTER] to start the shell  timeout=5
   Write To UART             \r
   Wait For Line On UART     ${FLAG_STRING}                    timeout=5
 

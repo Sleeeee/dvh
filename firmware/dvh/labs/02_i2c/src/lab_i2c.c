@@ -18,6 +18,7 @@ Lab_StatusTypeDef Lab_I2C_Init(void) {
     return LAB_ERROR;
   }
   memset(password, 0, sizeof(password));
+  Utils_UART_Writeline("[BOOT] Boot sequence finished. Press [ENTER] to start the shell.\r\n");
   return LAB_OK;
 }
 
