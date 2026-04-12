@@ -89,7 +89,7 @@ typedef struct {
 extern I2C_HandleTypeDef hi2c2;
 
 #define I2C_MEMADD_SIZE_8BIT 0x00000001U
-#define VIRTUAL_EEPROM_SIZE 256
+#define SPY_EEPROM_SIZE 256
 static uint32_t mock_tick_counter = 0;
 
 void SPY_I2C_Clear(void);
@@ -99,5 +99,7 @@ HAL_StatusTypeDef HAL_I2C_IsDeviceReady(I2C_HandleTypeDef *hi2c, uint16_t DevAdd
 HAL_StatusTypeDef HAL_I2C_Mem_Read(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout);
 
 HAL_StatusTypeDef HAL_I2C_Mem_Write(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+
+extern uint8_t SPY_EEPROM_Buffer[SPY_EEPROM_SIZE];
 
 #endif

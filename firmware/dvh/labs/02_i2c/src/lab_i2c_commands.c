@@ -23,7 +23,7 @@ Utils_Shell_StatusTypeDef Lab_I2C_Cmd_Login(char* args) {
   Utils_UART_Readline_Ex(input, sizeof(input), UTILS_UART_ECHO_SILENT);
 
   if (strcmp(input, (char*)password) == 0) {
-    Utils_UART_Writeline("[DVH] Logged in sucessfully !\r\n");
+    Utils_UART_Writeline("[DVH] Logged in successfully !\r\n");
     return UTILS_SHELL_EXIT;
   }
 

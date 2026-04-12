@@ -1,4 +1,5 @@
 #include "../../../dvh/shared/include/utils_uart.h"
+#include <string.h>
 
 void Utils_UART_Writeline(const char* text) {
   strncat(SPY_UART_Buffer, text, sizeof(SPY_UART_Buffer) - strlen(SPY_UART_Buffer) - 1);
@@ -7,7 +8,7 @@ void Utils_UART_Writeline(const char* text) {
 static const char* INPUT_QUEUE[2];
 static int input_idx = 0;
 
-void Set_Input(const char* line1, const char* line2) {
+void SPY_UART_SetInput(const char* line1, const char* line2) {
   INPUT_QUEUE[0] = line1;
   INPUT_QUEUE[1] = line2;
   input_idx = 0;

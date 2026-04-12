@@ -9,7 +9,7 @@
 // Stubs to compensate for the missing source
 Utils_Shell_StatusTypeDef Utils_Shell_Cmd_Echo(char* args) { return UTILS_SHELL_CONTINUE; }
 Utils_Shell_StatusTypeDef Utils_Shell_Cmd_Clear(char* args) { return UTILS_SHELL_CONTINUE; }
-Utils_Shell_StatusTypeDef Utils_Shell_Cmd_Reboot(char* args) { return UTILS_SHELL_CONTINUE; }
+Utils_Shell_StatusTypeDef Utils_Shell_Cmd_Reboot(char* args) { return UTILS_SHELL_EXIT; }
 
 void setUp(void) {
   SPY_UART_Clear();
@@ -26,7 +26,7 @@ void test_Lab_UART_Cmd_GetUsers_should_list(void) {
 }
 
 void test_Lab_UART_Cmd_Login_should_succeed(void) {
-  Set_Input("monitoring_svc", "u4rt_1s_pr3tty_v3rb0s3");
+  SPY_UART_SetInput("monitoring_svc", "u4rt_1s_pr3tty_v3rb0s3");
 
   Utils_Shell_StatusTypeDef result = Lab_UART_Cmd_Login(NULL);
 
@@ -35,7 +35,7 @@ void test_Lab_UART_Cmd_Login_should_succeed(void) {
 }
 
 void test_Lab_UART_Cmd_Login_should_fail(void) {
-  Set_Input("monitoring_svc", "wr0ng_p4ss");
+  SPY_UART_SetInput("monitoring_svc", "wr0ng_p4ss");
 
   Utils_Shell_StatusTypeDef result = Lab_UART_Cmd_Login(NULL);
 
@@ -51,7 +51,7 @@ void test_Lab_UART_Cmd_UserDb_should_dump(void) {
 }
 
 void test_Lab_UART_Cmd_Root_should_succeed(void) {
-  Set_Input("linkinpark", NULL); 
+  SPY_UART_SetInput("linkinpark", NULL); 
 
   Utils_Shell_StatusTypeDef result = Lab_UART_Cmd_Root(NULL);
 
@@ -60,7 +60,7 @@ void test_Lab_UART_Cmd_Root_should_succeed(void) {
 }
 
 void test_Lab_UART_Cmd_Root_should_fail(void) {
-  Set_Input("wr0ng_p4ss", NULL);
+  SPY_UART_SetInput("wr0ng_p4ss", NULL);
 
   Utils_Shell_StatusTypeDef result = Lab_UART_Cmd_Root(NULL);
 
