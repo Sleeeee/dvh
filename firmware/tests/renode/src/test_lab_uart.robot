@@ -27,7 +27,7 @@ Verify Lab UART
 
   # Config (select lab 0001)
   Create Terminal Tester    ${UART}
-  Execute Command           sysbus.gpioPortA OnGPIO 4 True
+  Execute Command           sysbus.gpioPortA OnGPIO 15 True
 
   # Run
   Execute Command           start
