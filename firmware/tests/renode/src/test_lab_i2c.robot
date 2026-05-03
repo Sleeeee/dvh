@@ -26,8 +26,8 @@ Verify Lab I2C
 
   # Config (select lab 0010 and press reset button)
   Create Terminal Tester    ${UART}
-  Execute Command           sysbus.gpioPortA OnGPIO 3 True
-  Execute Command           sysbus.gpioPortA OnGPIO 5 True
+  Execute Command           sysbus.gpioPortB OnGPIO 3 True
+  Execute Command           sysbus.gpioPortB OnGPIO 9 True
 
   # Run
   Execute Command           start
