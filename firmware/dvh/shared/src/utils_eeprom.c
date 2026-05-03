@@ -22,7 +22,7 @@ Utils_EEPROM_StatusTypeDef Utils_EEPROM_Read(uint8_t address, uint8_t *data, uin
   return (status == HAL_OK) ? UTILS_EEPROM_OK : UTILS_EEPROM_ERROR;
 }
 
-// WARNING : this does not account for WP (not linked to a DVH 0.1 GPIO)
+// This helper functoin does not account for WP, ensure writing is allowed before calling
 Utils_EEPROM_StatusTypeDef Utils_EEPROM_Write(uint8_t address, uint8_t *data, uint16_t len) {
   uint8_t page_start = address / UTILS_EEPROM_PAGE_SIZE;
   uint8_t page_end = (address + len - 1) / UTILS_EEPROM_PAGE_SIZE;

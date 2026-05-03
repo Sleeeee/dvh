@@ -52,7 +52,7 @@ Lab_StatusTypeDef Lab_SWD_Init(void) {
 
 void Lab_SWD_Loop(void) {
   // Blink LED
-  HAL_GPIO_TogglePin(DOOR_IN_GPIO_Port, DOOR_IN_Pin);
+  HAL_GPIO_TogglePin(DOOR_OUT_GPIO_Port, DOOR_OUT_Pin);
   HAL_Delay(1000);
 }
 

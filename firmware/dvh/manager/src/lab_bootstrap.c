@@ -6,9 +6,6 @@
 #include "main.h"
 
 void LabBootstrap_Start(void) {
-  LabSelect_Init(); // WARNING: DVH 0.1 GPIO init
-  HAL_Delay(100);
-
   uint8_t lab_id = LabSelect_Read();
   LabBlink_Selected(lab_id);
   ILab* lab = LabRegistry_GetById(lab_id);

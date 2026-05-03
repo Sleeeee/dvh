@@ -37,14 +37,27 @@ void Lab_I2C_Loop(void) {
 }
 
 Lab_StatusTypeDef Lab_I2C_Reset(void) {
-  if (Utils_EEPROM_IsConnected() != UTILS_EEPROM_OK) { return LAB_ERROR; }
-  if (Utils_EEPROM_EraseAll() != UTILS_EEPROM_OK) { return LAB_ERROR; }
+  // Enable Write Control (and make sure to disable it when returning)
+  HAL_GPIO_WritePin(EEPROM_WP_GPIO_Port, EEPROM_WP_Pin, GPIO_PIN_RESET);
+  HAL_Delay(100);
+
+  if (Utils_EEPROM_IsConnected() != UTILS_EEPROM_OK) {
+    HAL_GPIO_WritePin(EEPROM_WP_GPIO_Port, EEPROM_WP_Pin, GPIO_PIN_SET);
+    return LAB_ERROR;
+  }
+  if (Utils_EEPROM_EraseAll() != UTILS_EEPROM_OK) {
+    HAL_GPIO_WritePin(EEPROM_WP_GPIO_Port, EEPROM_WP_Pin, GPIO_PIN_SET);
+    return LAB_ERROR;
+  }
 
   char secret[128];
   Utils_Secrets_Decrypt(LAB_I2C_USER_PASSWORD, LAB_I2C_USER_PASSWORD_LEN, secret, sizeof(secret));
 
   // Include string terminator in write
-  if (Utils_EEPROM_Write(0x00, (uint8_t*)secret, strlen(secret) + 1) != UTILS_EEPROM_OK) { return LAB_ERROR; }
+  if (Utils_EEPROM_Write(0x00, (uint8_t*)secret, strlen(secret) + 1) != UTILS_EEPROM_OK) {
+    HAL_GPIO_WritePin(EEPROM_WP_GPIO_Port, EEPROM_WP_Pin, GPIO_PIN_SET);
+    return LAB_ERROR;
+  }
   memset(secret, 0, sizeof(secret));
 
   char decrypted_flag[LAB_I2C_FLAG_TWO_LEN + 1];
@@ -53,11 +66,15 @@ Lab_StatusTypeDef Lab_I2C_Reset(void) {
   Utils_Secrets_Decrypt(LAB_I2C_CONFIG_NOTE, LAB_I2C_CONFIG_NOTE_LEN, decrypted_note, sizeof(decrypted_note));
   snprintf(secret, sizeof(secret), "%s%s", decrypted_note, decrypted_flag);
 
-  if (Utils_EEPROM_Write(0x80, (uint8_t*)secret, strlen(secret) + 1) != UTILS_EEPROM_OK) { return LAB_ERROR; }
+  if (Utils_EEPROM_Write(0x80, (uint8_t*)secret, strlen(secret) + 1) != UTILS_EEPROM_OK) {
+    HAL_GPIO_WritePin(EEPROM_WP_GPIO_Port, EEPROM_WP_Pin, GPIO_PIN_SET);
+    return LAB_ERROR;
+  }
   memset(secret, 0, sizeof(secret));
   memset(decrypted_flag, 0, sizeof(decrypted_flag));
   memset(decrypted_note, 0, sizeof(decrypted_note));
 
+  HAL_GPIO_WritePin(EEPROM_WP_GPIO_Port, EEPROM_WP_Pin, GPIO_PIN_SET);
   return LAB_OK;
 }
 
