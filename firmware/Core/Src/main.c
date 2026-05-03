@@ -109,9 +109,9 @@ int main(void)
   MX_USB_PCD_Init();
   MX_SPI2_Init();
   MX_USART2_UART_Init();
-
-  /* USER CODE ENTRYPOINT */
+  /* USER CODE BEGIN 2 */
   LabBootstrap_Start();
+  /* USER CODE END 2 */
 }
 
 /**
@@ -388,7 +388,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, DOOR_OUT_Pin|LDO_EN_Pin|LAB_S0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, RFID_RST_Pin|EEPROM_WP_Pin|ATTINY_RST_Pin|LAB_S1_Pin
+  HAL_GPIO_WritePin(GPIOB, SCREEN_RES_Pin|EEPROM_WP_Pin|ATTINY_RST_Pin|LAB_S1_Pin
                           |LAB_S2_Pin|LAB_S3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : DOOR_OUT_Pin LDO_EN_Pin LAB_S0_Pin */
@@ -398,26 +398,26 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : SPI1_CS_Pin */
-  GPIO_InitStruct.Pin = SPI1_CS_Pin;
+  /*Configure GPIO pin : SCREEN_BLK_Pin */
+  GPIO_InitStruct.Pin = SCREEN_BLK_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(SPI1_CS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(SCREEN_BLK_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : RFID_RST_Pin ATTINY_RST_Pin LAB_S1_Pin LAB_S2_Pin
+  /*Configure GPIO pins : SCREEN_RES_Pin ATTINY_RST_Pin LAB_S1_Pin LAB_S2_Pin
                            LAB_S3_Pin */
-  GPIO_InitStruct.Pin = RFID_RST_Pin|ATTINY_RST_Pin|LAB_S1_Pin|LAB_S2_Pin
+  GPIO_InitStruct.Pin = SCREEN_RES_Pin|ATTINY_RST_Pin|LAB_S1_Pin|LAB_S2_Pin
                           |LAB_S3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : RFID_IRQ_Pin */
-  GPIO_InitStruct.Pin = RFID_IRQ_Pin;
+  /*Configure GPIO pin : SCREEN_DC_Pin */
+  GPIO_InitStruct.Pin = SCREEN_DC_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(RFID_IRQ_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(SCREEN_DC_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : EEPROM_WP_Pin */
   GPIO_InitStruct.Pin = EEPROM_WP_Pin;
