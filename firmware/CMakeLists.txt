@@ -49,10 +49,13 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    dvh/shared/src/fonts.c
+    dvh/shared/src/st7789.c
     dvh/shared/src/utils_secrets.c
     dvh/shared/src/utils_uart.c
     dvh/shared/src/utils_shell.c
     dvh/shared/src/utils_eeprom.c
+    dvh/shared/src/utils_screen.c
 
     dvh/manager/src/lab_bootstrap.c
     dvh/manager/src/lab_registry.c
