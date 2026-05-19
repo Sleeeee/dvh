@@ -16,28 +16,35 @@ void LabBootstrap_Start(void) {
 
   if (lab == NULL) {
     // Unable to load a lab
+    Utils_Screen_Lab_Not_Found();
     while (1) {
-      Utils_Screen_Lab_Not_Found(); // This creates a blink effect because the screen has to re-render every time it enters the loop
       LabBlink_Broken();
     }
   }
 
   if (LabSelect_Reset_Pressed()) {
+    Utils_Screen_Lab_Reset();
     LabBlink_Reset();
+
     if (lab->reset() != LAB_OK) {
-      while (1) { LabBlink_Broken(); } // Lab reset failed
+      // Lab reset failed
+      Utils_Screen_Lab_Reset_Failed();
+      while (1) {
+        LabBlink_Broken();
+      }
     }
     LabBlink_Continue();
   }
 
   if (lab->init() != LAB_OK) {
     // Lab init failed
+    Utils_Screen_Lab_Init_Failed();
     while (1) {
-      Utils_Screen_Lab_Init_Failed();
       LabBlink_Broken();
     }
   }
 
+  HAL_Delay(2000); // Artificial delay for UX
   while (1) {
     lab->loop();
   }
