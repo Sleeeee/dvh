@@ -4,6 +4,7 @@
 #include "utils_uart.h"
 #include "utils_shell.h"
 #include "utils_secrets.h"
+#include "utils_screen.h"
 #include "main.h"
 #include <string.h>
 #include <stdio.h>
@@ -18,21 +19,25 @@ Lab_StatusTypeDef Lab_I2C_Init(void) {
     return LAB_ERROR;
   }
   memset(password, 0, sizeof(password));
-  Utils_UART_Writeline("[BOOT] Boot sequence finished. Press [ENTER] to start the shell.\r\n");
+  Utils_Screen_Fill_Write("[INIT] Successfully fetched user password from the EEPROM.", UTILS_SCREEN_STANDARD);
+  Utils_UART_Writeline("[INIT] Sequence finished. Press [ENTER] to start the shell.\r\n");
   return LAB_OK;
 }
 
 void Lab_I2C_Loop(void) {
   Utils_UART_ReceiveEnter();
-  Utils_UART_Writeline("[INFO] Successfully fetched user password from the EEPROM.\r\n");
+
+  Utils_Screen_UART_Anonymous();
   Utils_Shell_Start("[anonymous@dvh]$ ", LAB_I2C_COMMANDS_ANONYMOUS);
 
   Utils_Secrets_Transmit_Flag(LAB_I2C_FLAG_ONE, LAB_I2C_FLAG_ONE_LEN);
+  Utils_Screen_UART_User();
   Utils_Shell_Start("[user@dvh]$ ", LAB_I2C_COMMANDS_USER);
 
   // Flag two is planted directly inside the EEPROM, along with instructions to progress to flag three
 
   Utils_Secrets_Transmit_Flag(LAB_I2C_FLAG_THREE, LAB_I2C_FLAG_THREE_LEN);
+  Utils_Screen_UART_Root();
   Utils_Shell_Start("[root@dvh]# ", LAB_I2C_COMMANDS_ROOT);
 }
 

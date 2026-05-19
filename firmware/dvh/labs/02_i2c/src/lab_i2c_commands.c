@@ -3,6 +3,7 @@
 #include "utils_eeprom.h"
 #include "utils_uart.h"
 #include "utils_secrets.h"
+#include "utils_screen.h"
 #include "main.h"
 #include <string.h>
 #include <stdio.h>
@@ -15,6 +16,8 @@ Utils_Shell_StatusTypeDef Lab_I2C_Cmd_Login(char* args) {
   memset(password, 0, sizeof(password));
   if (Utils_EEPROM_Read(0x00, password, LAB_I2C_USER_PASSWORD_LEN) != UTILS_EEPROM_OK) {
     Utils_UART_Writeline("An error occured while fetching data from the EEPROM.\r\n");
+    Utils_Screen_Access_Denied();
+    Utils_Screen_UART_Anonymous();
     return UTILS_SHELL_CONTINUE;
   }
 
@@ -28,6 +31,8 @@ Utils_Shell_StatusTypeDef Lab_I2C_Cmd_Login(char* args) {
   }
 
   Utils_UART_Writeline("Incorrect password\r\n");
+  Utils_Screen_Access_Denied();
+  Utils_Screen_UART_Anonymous();
   return UTILS_SHELL_CONTINUE;
 }
 
@@ -72,6 +77,8 @@ Utils_Shell_StatusTypeDef Lab_I2C_Cmd_Root(char* args) {
   uint8_t magic[2];
   if (Utils_EEPROM_Read(0x30, magic, 2) != UTILS_EEPROM_OK) {
     Utils_UART_Writeline("An error occured while retrieving the magic bytes from the EEPROM.\r\n");
+    Utils_Screen_Access_Denied();
+    Utils_Screen_UART_User();
     return UTILS_SHELL_CONTINUE;
   }
 
@@ -85,5 +92,7 @@ Utils_Shell_StatusTypeDef Lab_I2C_Cmd_Root(char* args) {
   }
 
   Utils_UART_Writeline("Authorization refused. Have you read the EEPROM configuration notes ?\r\n");
+  Utils_Screen_Access_Denied();
+  Utils_Screen_UART_User();
   return UTILS_SHELL_CONTINUE;
 }
