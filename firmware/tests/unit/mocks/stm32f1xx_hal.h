@@ -60,6 +60,15 @@ static inline void HAL_Delay(uint32_t Delay) {
 
 uint32_t HAL_GetTick(void);
 
+#define CoreDebug_DHCSR_C_DEBUGEN_Msk 0x00000001U
+
+typedef struct {
+  uint32_t DHCSR;
+} CoreDebug_Type;
+
+extern CoreDebug_Type* CoreDebug;
+extern CoreDebug_Type SPY_CoreDebug_Instance;
+
 // UART mocks
 typedef struct {
   uint32_t dummy;
@@ -101,5 +110,10 @@ HAL_StatusTypeDef HAL_I2C_Mem_Read(I2C_HandleTypeDef *hi2c, uint16_t DevAddress,
 HAL_StatusTypeDef HAL_I2C_Mem_Write(I2C_HandleTypeDef *hi2c, uint16_t DevAddress, uint16_t MemAddress, uint16_t MemAddSize, uint8_t *pData, uint16_t Size, uint32_t Timeout);
 
 extern uint8_t SPY_EEPROM_Buffer[SPY_EEPROM_SIZE];
+
+// SPI mocks
+typedef struct {
+  uint32_t dummy;
+} SPI_HandleTypeDef;
 
 #endif

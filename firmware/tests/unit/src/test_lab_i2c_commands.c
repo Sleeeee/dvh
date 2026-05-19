@@ -5,6 +5,7 @@
 #include "../../../dvh/shared/src/utils_shell.c"
 #include "../../../dvh/shared/src/utils_secrets.c"
 #include "../mocks/mock_utils_uart.c"
+#include "../mocks/mock_utils_screen.c"
 #include "stm32f1xx_hal.h"
 #include <string.h>
 
@@ -12,6 +13,7 @@ void setUp(void) {
   SPY_UART_Clear();
   input_idx = 0;
   SPY_I2C_Clear();
+  SPY_Screen_Clear();
 }
 
 void tearDown(void) {}
@@ -24,6 +26,7 @@ void test_Lab_I2C_Cmd_Login_should_succeed(void) {
 
   TEST_ASSERT_EQUAL(UTILS_SHELL_EXIT, result);
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Logged in successfully"));
+  TEST_ASSERT_EQUAL(SPY_Screen_AccessDenied_Calls, 0);
 }
 
 void test_Lab_I2C_Cmd_Login_should_failwrongpass(void) {
@@ -34,6 +37,8 @@ void test_Lab_I2C_Cmd_Login_should_failwrongpass(void) {
 
   TEST_ASSERT_EQUAL(UTILS_SHELL_CONTINUE, result);
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Incorrect password"));
+  TEST_ASSERT_EQUAL(SPY_Screen_AccessDenied_Calls, 1);
+  TEST_ASSERT_EQUAL(SPY_Screen_Anonymous_Calls, 1);
 }
 
 void test_Lab_I2C_Cmd_Login_should_failhardware(void) {
@@ -45,6 +50,8 @@ void test_Lab_I2C_Cmd_Login_should_failhardware(void) {
 
   TEST_ASSERT_EQUAL(UTILS_SHELL_CONTINUE, result);
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "An error occured"));
+  TEST_ASSERT_EQUAL(SPY_Screen_AccessDenied_Calls, 1);
+  TEST_ASSERT_EQUAL(SPY_Screen_Anonymous_Calls, 1);
 }
 
 void test_Lab_I2C_Cmd_Root_should_succeed(void) {
@@ -56,6 +63,7 @@ void test_Lab_I2C_Cmd_Root_should_succeed(void) {
   TEST_ASSERT_EQUAL(UTILS_SHELL_EXIT, result);
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Found magic bytes 0xcafe"));
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Root authorization granted"));
+  TEST_ASSERT_EQUAL(SPY_Screen_AccessDenied_Calls, 0);
 }
 
 void test_Lab_I2C_Cmd_Root_should_failwrongmagic(void) {
@@ -67,6 +75,8 @@ void test_Lab_I2C_Cmd_Root_should_failwrongmagic(void) {
   TEST_ASSERT_EQUAL(UTILS_SHELL_CONTINUE, result);
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Found magic bytes 0xfeca"));
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "Authorization refused"));
+  TEST_ASSERT_EQUAL(SPY_Screen_AccessDenied_Calls, 1);
+  TEST_ASSERT_EQUAL(SPY_Screen_User_Calls, 1);
 }
 
 void test_Lab_I2C_Cmd_Root_should_failhardware(void) {
@@ -79,6 +89,8 @@ void test_Lab_I2C_Cmd_Root_should_failhardware(void) {
   TEST_ASSERT_EQUAL(UTILS_SHELL_CONTINUE, result);
   TEST_ASSERT_NULL(strstr(SPY_UART_Buffer, "Found magic bytes")); // Ensure it returns before this
   TEST_ASSERT_NOT_NULL(strstr(SPY_UART_Buffer, "An error occured"));
+  TEST_ASSERT_EQUAL(SPY_Screen_AccessDenied_Calls, 1);
+  TEST_ASSERT_EQUAL(SPY_Screen_User_Calls, 1);
 }
 
 int main(void) {

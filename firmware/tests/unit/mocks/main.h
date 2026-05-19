@@ -19,4 +19,7 @@
 #define LAB_S3_Pin 0
 #define LAB_S3_GPIO_Port GPIOZ
 
+#define SCREEN_BLK_Pin 0
+#define SCREEN_BLK_GPIO_Port GPIOZ
+
 #endif

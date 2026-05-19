@@ -27,6 +27,9 @@ HAL_StatusTypeDef HAL_UART_Receive(UART_HandleTypeDef *huart, uint8_t *pData, ui
   return HAL_OK;
 }
 
+CoreDebug_Type SPY_CoreDebug_Instance = {0};
+CoreDebug_Type* CoreDebug = &SPY_CoreDebug_Instance;
+
 // I2C mocks
 I2C_HandleTypeDef hi2c2;
 

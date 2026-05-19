@@ -31,7 +31,7 @@ for test_file in "$TEST_DIR"/*.c; do
   echo "Compiling $test_file..."
 
   if ! gcc ${INCLUDES[@]} -o "$BINARY" "$test_file" "$UNITY_SRC" "$MOCK_SOURCE"; then
-    echo "Error: Compilation failed"
+    echo -e "Error: Compilation failed\n"
     ((FAILED_TESTS++))
     continue
   fi
@@ -43,6 +43,7 @@ for test_file in "$TEST_DIR"/*.c; do
   if ! ./"$BINARY"; then
     ((FAILED_TESTS++))
   fi
+  echo ""
 done
 
 echo "Cleaning up binary..."
