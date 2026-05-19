@@ -2,16 +2,29 @@
 #define UTILS_SCREEN_H
 
 typedef enum {
-  UTILS_SCREEN_OK,
-  UTILS_SCREEN_ERROR
-} Utils_Screen_StatusTypeDef;
+  UTILS_SCREEN_STANDARD = 0,
+  UTILS_SCREEN_SUCCESS,
+  UTILS_SCREEN_WARNING,
+} Utils_Screen_State;
 
-Utils_Screen_StatusTypeDef Utils_Screen_Welcome(void);
+void Utils_Screen_Fill(Utils_Screen_State status);
 
-Utils_Screen_StatusTypeDef Utils_Screen_Display_Lab(int lab_id);
+void Utils_Screen_Write(char* text, Utils_Screen_State status);
 
-Utils_Screen_StatusTypeDef Utils_Screen_Lab_Not_Found();
+void Utils_Screen_Fill_Write(char* text, Utils_Screen_State status);
 
-Utils_Screen_StatusTypeDef Utils_Screen_Lab_Init_Failed();
+void Utils_Screen_Welcome(void);
+
+void Utils_Screen_Display_Lab(int lab_id);
+
+void Utils_Screen_Lab_Not_Found(void);
+
+void Utils_Screen_Lab_Reset(void);
+
+void Utils_Screen_Lab_Reset_Failed(void);
+
+void Utils_Screen_Lab_Init_Failed(void);
+
+void Utils_Screen_Lab_Loaded(void);
 
 #endif
