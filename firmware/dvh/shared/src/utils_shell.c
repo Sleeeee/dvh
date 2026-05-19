@@ -19,7 +19,7 @@ Utils_Shell_StatusTypeDef Utils_Shell_Cmd_Clear(char* args) {
 }
 
 Utils_Shell_StatusTypeDef Utils_Shell_Cmd_Reboot(char* args) {
-  Utils_UART_Writeline("[DVH] System rebooted\r\n");
+  Utils_UART_Writeline("[DVH] Rebooting system...\r\n");
   HAL_Delay(200);
   Utils_UART_Writeline("\033[2J\033[H");
   return UTILS_SHELL_EXIT;

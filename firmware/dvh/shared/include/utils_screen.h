@@ -3,7 +3,7 @@
 
 typedef enum {
   UTILS_SCREEN_STANDARD = 0,
-  UTILS_SCREEN_SUCCESS,
+  UTILS_SCREEN_HIGHLIGHT,
   UTILS_SCREEN_WARNING,
 } Utils_Screen_State;
 
@@ -26,5 +26,13 @@ void Utils_Screen_Lab_Reset_Failed(void);
 void Utils_Screen_Lab_Init_Failed(void);
 
 void Utils_Screen_Lab_Loaded(void);
+
+void Utils_Screen_UART_Anonymous(void);
+
+void Utils_Screen_UART_User(void);
+
+void Utils_Screen_UART_Root(void);
+
+void Utils_Screen_Access_Denied(void);
 
 #endif
