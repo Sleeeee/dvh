@@ -1,5 +1,6 @@
 #include "../lib/unity.h"
 #include "../../../dvh/labs/00_swd/src/lab_swd.c"
+#include "../mocks/mock_utils_screen.c"
 #include <string.h>
 
 volatile char buffer[100];
@@ -33,12 +34,36 @@ void test_Lab_SWD_Solve_Flag_Three_should_decrypt(void) {
   TEST_ASSERT_EQUAL_STRING(mock_flag_three_plain, (char*)buffer);
 }
 
+void test_Lab_SWD_Loop_should_run(void) {
+  SPY_CoreDebug_Instance.DHCSR = 0;
+  SPY_Screen_Clear();
+
+  Lab_SWD_Loop();
+
+  TEST_ASSERT_TRUE(SPY_Screen_FillWrite_CallCount > 0);
+  TEST_ASSERT_EQUAL(UTILS_SCREEN_STANDARD, SPY_Screen_LastState);
+  TEST_ASSERT_NOT_NULL(strstr(SPY_Screen_LastText, "SAFE"));
+}
+
+void test_Lab_SWD_Loop_should_detect_debugger(void) {
+  SPY_CoreDebug_Instance.DHCSR = 1;
+  SPY_Screen_Clear();
+
+  Lab_SWD_Loop();
+
+  TEST_ASSERT_TRUE(SPY_Screen_FillWrite_CallCount > 0);
+  TEST_ASSERT_EQUAL(UTILS_SCREEN_WARNING, SPY_Screen_LastState);
+  TEST_ASSERT_NOT_NULL(strstr(SPY_Screen_LastText, "TAMPERED"));
+}
+
 int main(void) {
   UNITY_BEGIN();
 
   RUN_TEST(test_Lab_SWD_Solve_Flag_One_should_copy);
   RUN_TEST(test_Lab_SWD_Solve_Flag_Two_should_decrypt);
   RUN_TEST(test_Lab_SWD_Solve_Flag_Three_should_decrypt);
+  RUN_TEST(test_Lab_SWD_Loop_should_run);
+  RUN_TEST(test_Lab_SWD_Loop_should_detect_debugger);
 
   return UNITY_END();
 }
