@@ -1,6 +1,8 @@
 #include "lab_swd.h"
+#include "utils_screen.h"
 #include "main.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 static const char LAB_SWD_FLAG_ONE[] = "DVH{pl41n_text_d3t3ct1v3_fb242a8175}";
 
@@ -51,9 +53,34 @@ Lab_StatusTypeDef Lab_SWD_Init(void) {
 }
 
 void Lab_SWD_Loop(void) {
+  static bool first_run = true;
+  static bool previous_state = false; // Reflect debugger state of last run
+
+  bool debugger_attached = (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk) != 0;
+  uint16_t refresh_delay;
+
+  // Avoid unnecessary screen refreshes
+  if ((debugger_attached != previous_state) || first_run) {
+    if (debugger_attached) {
+      Utils_Screen_Fill_Write("[DVH] Debugger detected !", UTILS_SCREEN_WARNING);
+      Utils_Screen_Write("System status : TAMPERED", UTILS_SCREEN_WARNING);
+    } else {
+      Utils_Screen_Fill_Write("[DVH] Firmware integrity enforced", UTILS_SCREEN_STANDARD);
+      Utils_Screen_Write("System status : SAFE", UTILS_SCREEN_STANDARD);
+    }
+
+    first_run = false;
+    previous_state = debugger_attached;
+  }
+
   // Blink LED
+  if (debugger_attached) {
+    refresh_delay = 100;
+  } else {
+    refresh_delay = 1000;
+  }
   HAL_GPIO_TogglePin(DOOR_OUT_GPIO_Port, DOOR_OUT_Pin);
-  HAL_Delay(1000);
+  HAL_Delay(refresh_delay);
 }
 
 Lab_StatusTypeDef Lab_SWD_Reset(void) {
