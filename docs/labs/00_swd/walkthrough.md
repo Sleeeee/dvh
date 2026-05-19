@@ -53,10 +53,12 @@ Once you have set up the boards, you can power them on, while connecting the deb
 In order to dump the firmware, we can execute this OpenOCD command :
 
 ```bash
-openocd -f openocd.cfg -c "init; reset halt; dump_image firmware.bin 0x08000000 0x10000; exit"
+openocd -f openocd.cfg -c "init; dump_image firmware.bin 0x08000000 0x10000; exit"
 ```
 
-This command initiates a connection with the STM32 chip, tells it to reset and freeze instantaneously. This is very important because it allows the Debugprobe to correctly read the data from the chip. A running MCU would throw errors or incomplete/corrupt data. The command asks to dump the running image to a local file named `firmware.bin`, starting from address `0x08000000` with a flash size of `0x10000` (64kB).
+This command initiates a connection with the STM32 chip. The command asks to dump the running image to a local file named `firmware.bin`, starting from address `0x08000000` with a flash size of `0x10000` (64kB).
+
+> Some microcontrollers will require you to drop in the `reset halt` command between `init` and `dump_image`. Halting the MCU is considered safest to ensure data integrity. However, thanks to the Cortex architecture of the STM32, it is perfectly safe to dump the firmware with a running MCU.
 
 If the dumping executed successfully, you should see a new file `firmware.bin` in your working directory, as well as a similar output tail :
 
