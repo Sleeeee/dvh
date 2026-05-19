@@ -2,6 +2,7 @@
 #include "lab_uart_data.h"
 #include "utils_uart.h"
 #include "utils_secrets.h"
+#include "utils_screen.h"
 #include "main.h"
 #include <stdio.h>
 #include <string.h>
@@ -33,11 +34,13 @@ Utils_Shell_StatusTypeDef Lab_UART_Cmd_Login(char* args) {
 
   } else if (strcmp(username, LAB_UART_ROOT_USERNAME) == 0) {
     Utils_UART_Writeline("Access denied. Please log in first.\r\n");
-  
+
   } else {
     Utils_UART_Writeline("User not registered.\r\n");
   }
 
+  Utils_Screen_Access_Denied();
+  Utils_Screen_UART_Anonymous();
   return UTILS_SHELL_CONTINUE;
 }
 
@@ -99,5 +102,7 @@ Utils_Shell_StatusTypeDef Lab_UART_Cmd_Root(char* args) {
 
   HAL_Delay(2000);
   Utils_UART_Writeline("Incorrect password.\r\n");
+  Utils_Screen_Access_Denied();
+  Utils_Screen_UART_User();
   return UTILS_SHELL_CONTINUE;
 }

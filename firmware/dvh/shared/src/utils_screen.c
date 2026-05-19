@@ -20,7 +20,7 @@ typedef struct {
 
 static const Utils_Screen_ColorTheme COLOR_THEMES[] = {
   [UTILS_SCREEN_STANDARD] = {WHITE, BLUE},
-  [UTILS_SCREEN_SUCCESS] = {WHITE, GREEN},
+  [UTILS_SCREEN_HIGHLIGHT] = {RED, BLUE},
   [UTILS_SCREEN_WARNING] = {YELLOW, RED}
 };
 
@@ -82,5 +82,30 @@ void Utils_Screen_Lab_Init_Failed(void) {
 }
 
 void Utils_Screen_Lab_Loaded(void) {
-  Utils_Screen_Write("[SUCCESS] Lab loaded.", UTILS_SCREEN_SUCCESS);
+  Utils_Screen_Write("[SUCCESS] Lab loaded.", UTILS_SCREEN_STANDARD);
+}
+
+void Utils_Screen_UART_Anonymous(void) {
+  Utils_Screen_Fill_Write("[UART] Unknown user connected !", UTILS_SCREEN_STANDARD);
+  Utils_Screen_Write("Privilege level :", UTILS_SCREEN_STANDARD);
+  Utils_Screen_Write("anonymous", UTILS_SCREEN_HIGHLIGHT);
+}
+
+void Utils_Screen_UART_User(void) {
+  Utils_Screen_Fill_Write("[UART] Authentication successful !", UTILS_SCREEN_STANDARD);
+  Utils_Screen_Write("Privilege level :", UTILS_SCREEN_STANDARD);
+  Utils_Screen_Write("user", UTILS_SCREEN_HIGHLIGHT);
+}
+
+void Utils_Screen_UART_Root(void) {
+  Utils_Screen_Fill_Write("[UART] Access granted !", UTILS_SCREEN_STANDARD);
+  Utils_Screen_Write("Privilege level :", UTILS_SCREEN_STANDARD);
+  Utils_Screen_Write("root", UTILS_SCREEN_HIGHLIGHT);
+}
+
+void Utils_Screen_Access_Denied(void) {
+  for (uint8_t i = 0; i < 3; i++) {
+    Utils_Screen_Fill_Write("[WARNING] Access denied !", UTILS_SCREEN_WARNING);
+    HAL_Delay(200);
+  }
 }

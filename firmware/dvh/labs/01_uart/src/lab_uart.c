@@ -3,6 +3,7 @@
 #include "utils_uart.h"
 #include "utils_shell.h"
 #include "utils_secrets.h"
+#include "utils_screen.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -42,6 +43,9 @@ void Lab_UART_Boot_Sequence(const char* username, const unsigned char* pass, int
 
   Utils_UART_Writeline("[BOOT] Memory Check PASSED.\r\n");
   Utils_UART_Writeline("[BOOT] Boot sequence finished. Press [ENTER] to start the shell.\r\n");
+
+  Utils_Screen_Fill_Write("[INIT] Shell ready.", UTILS_SCREEN_STANDARD);
+  Utils_Screen_Write("System status : disconnected", UTILS_SCREEN_STANDARD);
 }
 
 Lab_StatusTypeDef Lab_UART_Init(void) {
@@ -57,17 +61,23 @@ void Lab_UART_Loop(void) {
   Utils_UART_ReceiveEnter();
 
   // Loop user in anonymous shell until SHELL_EXIT (login)
+  Utils_Screen_UART_Anonymous();
   Utils_UART_Writeline("[DVH] Welcome to the UART shell !\r\n");
   Utils_Secrets_Transmit_Flag(LAB_UART_FLAG_ONE, LAB_UART_FLAG_ONE_LEN);
   Utils_Shell_Start("[anonymous@dvh]$ ", LAB_UART_COMMANDS_ANONYMOUS);
 
   // Loop user in user shell until SHELL_EXIT (root)
+  Utils_Screen_UART_User();
   Utils_Secrets_Transmit_Flag(LAB_UART_FLAG_TWO, LAB_UART_FLAG_TWO_LEN);
   Utils_Shell_Start("[monitoring_svc@dvh]$ ", LAB_UART_COMMANDS_USER);
 
   // Loop user in root shell until SHELL_EXIT (reboot)
+  Utils_Screen_UART_Root();
   Utils_Secrets_Transmit_Flag(LAB_UART_FLAG_THREE, LAB_UART_FLAG_THREE_LEN);
   Utils_Shell_Start("[root@dvh]# ", LAB_UART_COMMANDS_ROOT);
+
+  Utils_Screen_Fill_Write("[INFO] Rebooting system...", UTILS_SCREEN_STANDARD);
+  HAL_Delay(1000);
 }
 
 Lab_StatusTypeDef Lab_UART_Reset(void) {
