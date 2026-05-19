@@ -89,16 +89,14 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  #ifndef SIMULATION // Hacky solution to keep the conditional definition inside user code to keep it across CubeMX code re-generations
   /* USER CODE END Init */
 
   /* Configure the system clock */
-  #ifndef SIMULATION
-    SystemClock_Config();
-  #endif
+  SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  
+  #endif
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -112,6 +110,16 @@ int main(void)
   /* USER CODE BEGIN 2 */
   LabBootstrap_Start();
   /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
 }
 
 /**
@@ -385,39 +393,24 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, DOOR_OUT_Pin|LDO_EN_Pin|LAB_S0_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DOOR_OUT_Pin|SCREEN_BLK_Pin|LDO_EN_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, SCREEN_RES_Pin|EEPROM_WP_Pin|ATTINY_RST_Pin|LAB_S1_Pin
-                          |LAB_S2_Pin|LAB_S3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, SCREEN_RES_Pin|SCREEN_DC_Pin|EEPROM_WP_Pin|ATTINY_RST_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : DOOR_OUT_Pin LDO_EN_Pin LAB_S0_Pin */
-  GPIO_InitStruct.Pin = DOOR_OUT_Pin|LDO_EN_Pin|LAB_S0_Pin;
+  /*Configure GPIO pins : DOOR_OUT_Pin SCREEN_BLK_Pin LDO_EN_Pin */
+  GPIO_InitStruct.Pin = DOOR_OUT_Pin|SCREEN_BLK_Pin|LDO_EN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : SCREEN_BLK_Pin */
-  GPIO_InitStruct.Pin = SCREEN_BLK_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(SCREEN_BLK_GPIO_Port, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : SCREEN_RES_Pin ATTINY_RST_Pin LAB_S1_Pin LAB_S2_Pin
-                           LAB_S3_Pin */
-  GPIO_InitStruct.Pin = SCREEN_RES_Pin|ATTINY_RST_Pin|LAB_S1_Pin|LAB_S2_Pin
-                          |LAB_S3_Pin;
+  /*Configure GPIO pins : SCREEN_RES_Pin SCREEN_DC_Pin ATTINY_RST_Pin */
+  GPIO_InitStruct.Pin = SCREEN_RES_Pin|SCREEN_DC_Pin|ATTINY_RST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : SCREEN_DC_Pin */
-  GPIO_InitStruct.Pin = SCREEN_DC_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(SCREEN_DC_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : EEPROM_WP_Pin */
   GPIO_InitStruct.Pin = EEPROM_WP_Pin;
@@ -426,11 +419,17 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(EEPROM_WP_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : LAB_RST_Pin */
-  GPIO_InitStruct.Pin = LAB_RST_Pin;
+  /*Configure GPIO pin : LAB_S0_Pin */
+  GPIO_InitStruct.Pin = LAB_S0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(LAB_RST_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(LAB_S0_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : LAB_S1_Pin LAB_S2_Pin LAB_S3_Pin LAB_RST_Pin */
+  GPIO_InitStruct.Pin = LAB_S1_Pin|LAB_S2_Pin|LAB_S3_Pin|LAB_RST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
