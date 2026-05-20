@@ -43,6 +43,7 @@ ExternalProject_Add(
   ATTiny_Glitch
   SOURCE_DIR ${ATTINY_GLITCH_DIR}
   CMAKE_ARGS -DCMAKE_TOOLCHAIN_FILE=${ATTINY_GLITCH_DIR}/avr-toolchain.cmake
+  BUILD_ALWAYS 1
   INSTALL_COMMAND ""
 )
 
@@ -70,6 +71,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   dvh/shared/src/utils_shell.c
   dvh/shared/src/utils_eeprom.c
   dvh/shared/src/utils_screen.c
+  dvh/shared/src/utils_isp.c
 
   dvh/manager/src/lab_bootstrap.c
   dvh/manager/src/lab_registry.c

@@ -1,10 +1,8 @@
-#define F_CPU 8000000UL
-
 #include <avr/io.h>
 #include <util/delay.h>
 
 #define TX_PIN PB3 
-#define BIT_DELAY 104 // 9600 baud
+#define BIT_DELAY 833 // 1200 baud (1,000,000 / 1200)
 
 void uart_tx_bit(uint8_t bit) {
   if (bit) {
@@ -40,7 +38,7 @@ int main(void) {
   _delay_ms(100); 
 
   while(1) {
-      uart_print("Hello World!\r\n");
+      uart_print("Hello World!");
       _delay_ms(2000); 
   }
 }
