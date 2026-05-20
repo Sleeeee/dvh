@@ -4,11 +4,13 @@
 #include "lab_swd.h"
 #include "lab_uart.h"
 #include "lab_i2c.h"
+#include "lab_glitch.h"
 
 static ILab* labs[] = {
   &Lab_SWD,
   &Lab_UART,
   &Lab_I2C,
+  &Lab_Glitch,
   NULL
 };
 
