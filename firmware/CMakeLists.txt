@@ -14,12 +14,12 @@ set(CMAKE_C_EXTENSIONS ON)
 
 option(SIMULATION "Build for Renode simulation (Bypasses Clock Config)" OFF)
 if(SIMULATION)
-    add_compile_definitions(SIMULATION)
+  add_compile_definitions(SIMULATION)
 endif()
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
+  set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 # Set the project name
@@ -35,55 +35,71 @@ message("Build type: " ${CMAKE_BUILD_TYPE})
 # Enable CMake support for ASM and C languages
 enable_language(C ASM)
 
+# Include ATTiny subprojects
+include(ExternalProject)
+set(ATTINY_GLITCH_DIR ${CMAKE_SOURCE_DIR}/dvh/labs/03_glitch/attiny)
+
+ExternalProject_Add(
+  ATTiny_Glitch
+  SOURCE_DIR ${ATTINY_GLITCH_DIR}
+  CMAKE_ARGS -DCMAKE_TOOLCHAIN_FILE=${ATTINY_GLITCH_DIR}/avr-toolchain.cmake
+  INSTALL_COMMAND ""
+)
+
 # Create an executable object type
 add_executable(${CMAKE_PROJECT_NAME})
+
+# Add subproject dependency
+add_dependencies(${CMAKE_PROJECT_NAME} ATTiny_Glitch)
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
 
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined library search paths
+  # Add user defined library search paths
 )
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user sources here
-    dvh/shared/src/fonts.c
-    dvh/shared/src/st7789.c
-    dvh/shared/src/utils_secrets.c
-    dvh/shared/src/utils_uart.c
-    dvh/shared/src/utils_shell.c
-    dvh/shared/src/utils_eeprom.c
-    dvh/shared/src/utils_screen.c
+  # Add user sources here
+  dvh/shared/src/fonts.c
+  dvh/shared/src/st7789.c
+  dvh/shared/src/utils_secrets.c
+  dvh/shared/src/utils_uart.c
+  dvh/shared/src/utils_shell.c
+  dvh/shared/src/utils_eeprom.c
+  dvh/shared/src/utils_screen.c
 
-    dvh/manager/src/lab_bootstrap.c
-    dvh/manager/src/lab_registry.c
-    dvh/manager/src/lab_select.c
-    dvh/manager/src/lab_blink.c
+  dvh/manager/src/lab_bootstrap.c
+  dvh/manager/src/lab_registry.c
+  dvh/manager/src/lab_select.c
+  dvh/manager/src/lab_blink.c
 
-    dvh/labs/00_swd/src/lab_swd.c
-    dvh/labs/01_uart/src/lab_uart.c
-    dvh/labs/01_uart/src/lab_uart_data.c
-    dvh/labs/01_uart/src/lab_uart_commands.c
-    dvh/labs/02_i2c/src/lab_i2c.c
-    dvh/labs/02_i2c/src/lab_i2c_data.c
-    dvh/labs/02_i2c/src/lab_i2c_commands.c
+  dvh/labs/00_swd/src/lab_swd.c
+  dvh/labs/01_uart/src/lab_uart.c
+  dvh/labs/01_uart/src/lab_uart_data.c
+  dvh/labs/01_uart/src/lab_uart_commands.c
+  dvh/labs/02_i2c/src/lab_i2c.c
+  dvh/labs/02_i2c/src/lab_i2c_data.c
+  dvh/labs/02_i2c/src/lab_i2c_commands.c
+  dvh/labs/03_glitch/src/lab_glitch.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined include paths
-    dvh/shared/include
-    dvh/manager/include
-    dvh/labs/00_swd/include
-    dvh/labs/01_uart/include
-    dvh/labs/02_i2c/include
+  # Add user defined include paths
+  dvh/shared/include
+  dvh/manager/include
+  dvh/labs/00_swd/include
+  dvh/labs/01_uart/include
+  dvh/labs/02_i2c/include
+  dvh/labs/03_glitch/include
 )
 
 # Add project symbols (macros)
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
-    # Add user defined symbols
+  # Add user defined symbols
 )
 
 # Remove wrong libob.a library dependency when using cpp files
@@ -91,22 +107,22 @@ list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES ob)
 
 # Add linked libraries
 target_link_libraries(${CMAKE_PROJECT_NAME}
-    stm32cubemx
+  stm32cubemx
 
-    # Add user defined libraries
+  # Add user defined libraries
 )
 
 # Build bin file
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_OBJCOPY} -O binary ${CMAKE_PROJECT_NAME}.elf ${CMAKE_PROJECT_NAME}.bin
-    COMMENT "Generating firmware.bin..."
-    BYPRODUCTS ${CMAKE_PROJECT_NAME}.bin
+  COMMAND ${CMAKE_OBJCOPY} -O binary ${CMAKE_PROJECT_NAME}.elf ${CMAKE_PROJECT_NAME}.bin
+  COMMENT "Generating firmware.bin..."
+  BYPRODUCTS ${CMAKE_PROJECT_NAME}.bin
 )
 
 # Add flash target
 add_custom_target(flash
-    COMMAND openocd -f ${CMAKE_SOURCE_DIR}/openocd.cfg -c "program ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.elf verify reset exit"
-    DEPENDS ${CMAKE_PROJECT_NAME}
-    COMMENT "Flashing firmware via SWD..."
-    USES_TERMINAL
+  COMMAND openocd -f ${CMAKE_SOURCE_DIR}/openocd.cfg -c "program ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.elf verify reset exit"
+  DEPENDS ${CMAKE_PROJECT_NAME}
+  COMMENT "Flashing firmware via SWD..."
+  USES_TERMINAL
 )
