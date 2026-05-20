@@ -4,7 +4,7 @@ set(CMAKE_PROJECT_NAME attiny)
 project(${CMAKE_PROJECT_NAME})
 
 set(MCU attiny85)
-set(F_CPU 8000000UL)
+set(F_CPU 1000000UL)
 
 add_executable(${CMAKE_PROJECT_NAME} main.c)
 
