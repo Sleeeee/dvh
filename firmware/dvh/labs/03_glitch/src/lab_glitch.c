@@ -10,20 +10,27 @@
 extern UART_HandleTypeDef huart2;
 
 Lab_StatusTypeDef Lab_Glitch_Init(void) {
+  HAL_GPIO_WritePin(ATTINY_RST_GPIO_Port, ATTINY_RST_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(LDO_EN_GPIO_Port, LDO_EN_Pin, GPIO_PIN_SET);
   HAL_Delay(100);
-
   return LAB_OK;
 }
 
 void Lab_Glitch_Loop(void) {
-  uint8_t buffer[64] = {0};
-  HAL_UART_Receive(&huart2, buffer, sizeof(buffer) - 1, 3000);
+  uint8_t c;
+  HAL_StatusTypeDef status = HAL_UART_Receive(&huart2, &c, 1, 10000);
 
-  if (strstr((char*)buffer, "Hello") != NULL) {
-    Utils_Screen_Fill_Write((char *)buffer, UTILS_SCREEN_WARNING);
-  } else {
-    HAL_GPIO_WritePin(DOOR_OUT_GPIO_Port, DOOR_OUT_Pin, GPIO_PIN_SET); 
+  if (status == HAL_OK) {
+    if ((char)c == '!') {
+      Utils_Screen_Fill(UTILS_SCREEN_WARNING);
+    } else {
+      Utils_Screen_WriteChar((char)c, UTILS_SCREEN_WARNING);
+    }
+
+  } else if (status == HAL_TIMEOUT) {
+      Utils_Screen_Fill_Write("[CRITICAL] ATTiny UART timeout", UTILS_SCREEN_WARNING);
+  } else if (status == HAL_ERROR) {
+      Utils_Screen_Fill_Write("[CRITICAL] UART hardware error", UTILS_SCREEN_WARNING);
   }
 }
 
