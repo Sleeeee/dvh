@@ -7,11 +7,13 @@ typedef enum {
   UTILS_SCREEN_WARNING,
 } Utils_Screen_State;
 
-void Utils_Screen_Fill(Utils_Screen_State status);
+void Utils_Screen_Fill(Utils_Screen_State state);
 
-void Utils_Screen_Write(char* text, Utils_Screen_State status);
+void Utils_Screen_WriteChar(char c, Utils_Screen_State state);
 
-void Utils_Screen_Fill_Write(char* text, Utils_Screen_State status);
+void Utils_Screen_Write(char* text, Utils_Screen_State state);
+
+void Utils_Screen_Fill_Write(char* text, Utils_Screen_State state);
 
 void Utils_Screen_Welcome(void);
 

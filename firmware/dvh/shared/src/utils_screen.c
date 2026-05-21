@@ -30,6 +30,19 @@ void Utils_Screen_Fill(Utils_Screen_State state) {
   ST7789_Fill_Color(COLOR_THEMES[state].bg);
 }
 
+void Utils_Screen_WriteChar(char c, Utils_Screen_State state) {
+  ST7789_WriteChar(cursor_x, cursor_y, c, *font, COLOR_THEMES[state].fg, COLOR_THEMES[state].bg);
+
+  cursor_x += font->width;
+  if (cursor_x >= (ST7789_WIDTH - font->width)) {
+    cursor_y += font->height;
+    cursor_x = BASE_X_OFFSET;
+  }
+  if (cursor_y >= (ST7789_HEIGHT - font->height)) {
+    cursor_y = BASE_Y_OFFSET;
+  }
+}
+
 void Utils_Screen_Write(char* text, Utils_Screen_State state) {
   ST7789_WriteString(cursor_x, cursor_y, text, *font, COLOR_THEMES[state].fg, COLOR_THEMES[state].bg);
 
@@ -39,7 +52,7 @@ void Utils_Screen_Write(char* text, Utils_Screen_State state) {
   cursor_y += (requested_lines * font->height);
 
   // Vertical bounds check
-  if (cursor_y >= ST7789_HEIGHT - font->height) {
+  if (cursor_y >= (ST7789_HEIGHT - font->height)) {
     cursor_y = BASE_Y_OFFSET;
   }
 }
