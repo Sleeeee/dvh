@@ -3,28 +3,28 @@
 
 #define TX_PIN PB3 
 #define TRIG_PIN PB4
-#define BIT_DELAY 833 // 1200 baud (1,000,000 / 1200)
+#define BIT_DELAY 715
 
-void uart_tx_bit(uint8_t bit) {
-  if (bit) {
-    PORTB |= (1 << TX_PIN);  // HIGH
-  } else {
-    PORTB &= ~(1 << TX_PIN); // LOW
-  }
-  _delay_us(BIT_DELAY);
-}
+#define CANARY_SIZE 16
+uint8_t canary[CANARY_SIZE] __attribute__ ((section (".noinit")));
 
 void uart_tx_byte(uint8_t data) {
-  uart_tx_bit(0); // Start bit
+  PORTB &= ~(1 << TX_PIN); // Start bit (LOW)
+  _delay_us(BIT_DELAY);
 
-  // Data (8 bits, LSB first)
+  // Data bits (8 bits, LSB first)
   for (uint8_t i = 0; i < 8; i++) {
-    uart_tx_bit(data & 0x01);
+    if (data & 0x01) {
+      PORTB |= (1 << TX_PIN); // HIGH
+    } else {
+      PORTB &= ~(1 << TX_PIN); // LOW
+    }
+    _delay_us(BIT_DELAY);
     data >>= 1;
   }
 
-  uart_tx_bit(1); // Stop bit
-  _delay_us(BIT_DELAY); 
+  PORTB |= (1 << TX_PIN); // Stop bit (HIGH)
+  _delay_us(BIT_DELAY);
 }
 
 void uart_print(const char* str) {
@@ -34,14 +34,40 @@ void uart_print(const char* str) {
 }
 
 int main(void) {
-  DDRB |= (1 << TX_PIN); // Configure output
-  PORTB |= (1 << TX_PIN); // UART idle high
-  PORTB &= ~(1 << TRIG_PIN); // TRIG idle low
-  _delay_ms(100); 
+  uint8_t reset_cause = MCUSR;
+  MCUSR = 0;
+
+  uint8_t is_glitch = 1;
+  // Inspect canary for expected bytes
+  for (uint8_t i = 0; i < CANARY_SIZE; i++) {
+    uint8_t expected_val = (i % 2 == 0) ? 0xAA : 0x55;
+    if (canary[i] != expected_val) {
+      is_glitch = 0;
+      break;
+    }
+  }
+
+  // Refresh canary for next time
+  if (!is_glitch) {
+    for (uint8_t i = 0; i < CANARY_SIZE; i++) {
+      canary[i] = (i % 2 == 0) ? 0xAA : 0x55;
+    }
+  }
+
+  // Slow down the clock using prescaler (125 kHz)
+  CLKPR = (1 << CLKPCE);
+  CLKPR = (1 << CLKPS2) | (1 << CLKPS1);
+
+  DDRB |= (1 << TX_PIN) | (1 << TRIG_PIN); 
+  PORTB |= (1 << TX_PIN); 
+  PORTB &= ~(1 << TRIG_PIN); 
+  _delay_ms(100);
+
+  if (is_glitch && !(reset_cause & (1 << EXTRF))) {
+    uart_tx_byte(0xca); // Magic byte
+  }
 
   while(1) {
-    volatile uint8_t never = 0;
-
     uart_print("[UART] Verifying ATTiny signature");
     _delay_ms(500);
     uart_tx_byte('.');
@@ -49,16 +75,23 @@ int main(void) {
     uart_tx_byte('.');
     _delay_ms(500);
     uart_tx_byte('.');
-    _delay_us(50); // Very small delay to facilitate glitch
+    _delay_ms(20); 
 
-    // PORTB |= (1 << TRIG_PIN); // Raise TRIG
+    PORTB |= (1 << TRIG_PIN);
+    _delay_us(200);
 
-    if (never) {
-      // PORTB &= ~(1 << TRIG_PIN); // Lower TRIG
-      uart_print("GRANTED");
+    // If any loop iteration gets skipped, count will be wrong
+    volatile uint16_t count = 0;
+    for (volatile uint16_t i = 0; i < 500; i++) {
+        count++;
+    }
+
+    PORTB &= ~(1 << TRIG_PIN); // Lower TRIG
+
+    if (count != 500) {
+      uart_tx_byte(0xcb);
       _delay_ms(10000);
     } else {
-      // PORTB &= ~(1 << TRIG_PIN); // Lower TRIG
       uart_print("DENIED ");
     }
 
