@@ -1,5 +1,7 @@
 #include "lab_glitch.h"
+#include "lab_glitch_data.h"
 #include "attiny.h"
+#include "utils_secrets.h"
 #include "utils_isp.h"
 #include "utils_screen.h"
 #include "main.h"
@@ -17,11 +19,29 @@ Lab_StatusTypeDef Lab_Glitch_Init(void) {
 }
 
 void Lab_Glitch_Loop(void) {
+  static bool browned_out = false;
   uint8_t c;
   HAL_StatusTypeDef status = HAL_UART_Receive(&huart2, &c, 1, 10000);
 
   if (status == HAL_OK) {
-    if ((char)c == '!') {
+    if (!browned_out && (char)c == 0xca) {
+      char flag[64];
+      Utils_Secrets_Decrypt(LAB_GLITCH_FLAG_ONE, LAB_GLITCH_FLAG_ONE_LEN, flag, sizeof(flag));
+      Utils_Screen_Fill_Write(flag, UTILS_SCREEN_WARNING);
+
+      browned_out = true;
+      HAL_Delay(20000);
+
+    } else if ((char)c == 0xcb) {
+      char flag[64];
+      Utils_Secrets_Decrypt(LAB_GLITCH_FLAG_TWO, LAB_GLITCH_FLAG_TWO_LEN, flag, sizeof(flag));
+      Utils_Screen_Fill_Write(flag, UTILS_SCREEN_WARNING);
+
+      while (1) {
+        HAL_Delay(20000); // Lab is over for now
+      }
+
+    } else if ((char)c == '!') {
       Utils_Screen_Fill(UTILS_SCREEN_WARNING);
     } else {
       Utils_Screen_WriteChar((char)c, UTILS_SCREEN_WARNING);
