@@ -1,11 +1,8 @@
 #include "../lib/unity.h"
 #include "../../../dvh/shared/src/utils_secrets.c"
+#include "../mocks/mock_utils_uart.c"
 #include <string.h>
 #include <stdbool.h>
-
-void Utils_UART_Writeline(const char* text) {
-  strncat(SPY_UART_Buffer, text, sizeof(SPY_UART_Buffer) - strlen(SPY_UART_Buffer) - 1);
-}
 
 void setUp(void) {}
 

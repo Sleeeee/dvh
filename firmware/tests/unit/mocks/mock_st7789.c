@@ -17,6 +17,15 @@ void ST7789_Fill_Color(uint16_t color) {
   SPY_ST7789_BG = color;
 }
 
+void ST7789_WriteChar(uint16_t x, uint16_t y, const char c, FontDef font, uint16_t color, uint16_t bgcolor) {
+  (void)font;
+  SPY_ST7789_FG = color;
+  SPY_ST7789_BG = bgcolor;
+  SPY_ST7789_X = x;
+  SPY_ST7789_Y = y;
+  strncpy(SPY_ST7789_Buffer, &c, 1);
+}
+
 void ST7789_WriteString(uint16_t x, uint16_t y, const char *str, FontDef font, uint16_t color, uint16_t bgcolor) {
   (void)font;
   SPY_ST7789_FG = color;
