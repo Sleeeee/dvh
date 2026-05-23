@@ -87,6 +87,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
   dvh/labs/02_i2c/src/lab_i2c_commands.c
   dvh/labs/03_glitch/src/lab_glitch.c
   dvh/labs/03_glitch/src/lab_glitch_data.c
+  dvh/labs/03_glitch/src/lab_glitch_commands.c
 )
 
 # Add include paths
