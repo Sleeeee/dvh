@@ -1,15 +1,8 @@
 #include "../lib/unity.h"
 #include "../../../dvh/shared/src/utils_shell.c"
+#include "../mocks/mock_utils_uart.c"
 #include "stm32f1xx_hal.h"
 #include <string.h>
-
-void Utils_UART_Writeline(const char* text) {
-  strncat(SPY_UART_Buffer, text, sizeof(SPY_UART_Buffer) - strlen(SPY_UART_Buffer) - 1);
-}
-
-void Utils_UART_Readline_Ex(char* buffer, uint16_t max_len, Utils_UART_EchoModeTypeDef mode) {
-  if (max_len > 0) buffer[0] = '\0';
-}
 
 char LAST_ARGS[64];
 Utils_Shell_StatusTypeDef Cmd_Test(char* args) {

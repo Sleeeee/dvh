@@ -13,6 +13,7 @@ INCLUDES=(
   "-I dvh/labs/00_swd/include"
   "-I dvh/labs/01_uart/include"
   "-I dvh/labs/02_i2c/include"
+  "-I dvh/labs/03_glitch/include"
 )
 MOCK_SOURCE="$MOCK_DIR/mock_hal.c"
 
