@@ -6,7 +6,12 @@ project(${CMAKE_PROJECT_NAME})
 set(MCU attiny85)
 set(F_CPU 125000UL)
 
-add_executable(${CMAKE_PROJECT_NAME} main.c)
+add_executable(${CMAKE_PROJECT_NAME}
+  src/main.c
+  src/attiny_hal.c
+)
+
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE include)
 
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -mmcu=${MCU} -DF_CPU=${F_CPU} -Os -g)
 target_link_options(${CMAKE_PROJECT_NAME} PRIVATE -mmcu=${MCU})
