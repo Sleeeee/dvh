@@ -11,6 +11,8 @@ add_executable(${CMAKE_PROJECT_NAME}
   src/attiny_hal.c
 )
 
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES SUFFIX ".elf")
+
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE include)
 
 target_compile_options(${CMAKE_PROJECT_NAME} PRIVATE -mmcu=${MCU} -DF_CPU=${F_CPU} -Os -g)

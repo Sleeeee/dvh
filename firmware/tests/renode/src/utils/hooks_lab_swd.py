@@ -11,7 +11,7 @@ def read_string(bus, address, size=64):
     return "".join([chr(b) for b in byte_array if 32 <= b <= 126])
 
 def get_reg_value(cpu, offset_reg):
-    reg_val = cpu.GetRegisterUnsafe(offset_reg)
+    reg_val = cpu.GetRegister(offset_reg)
     try:
         return System.Convert.ToUInt64(reg_val)
     except:
@@ -33,7 +33,7 @@ def check_flag(cpu, symbol, flag, ptr):
         match = True
 
     if match:
-        Logger.Log(LogLevel.Error, "Success: %s found! ('%s')" % (symbol, discovered_content))
+        Logger.Log(LogLevel.Info, "Success: %s found! ('%s')" % (symbol, discovered_content))
     else:
         Logger.Log(LogLevel.Error, "Failed: %s content mismatch" % flag)
         Logger.Log(LogLevel.Error, "    Expected: '%s'" % flag)
