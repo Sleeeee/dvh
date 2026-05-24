@@ -1,5 +1,6 @@
 #include "../../../dvh/shared/include/utils_uart.h"
 #include <string.h>
+#include <stdbool.h>
 
 void Utils_UART_Writeline(const char* text) {
   strncat(SPY_UART_Buffer, text, sizeof(SPY_UART_Buffer) - strlen(SPY_UART_Buffer) - 1);

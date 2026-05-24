@@ -44,10 +44,10 @@ jobs:
         with:
           release: "14.2.Rel1"
 
-      - name: Install CMake and Ninja
+      - name: Install building tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build
+          sudo apt-get install -y cmake ninja-build gcc-avr binutils-avr avr-libc
 
       - name: Build Firmware
         run: |
@@ -58,3 +58,4 @@ jobs:
         uses: antmicro/renode-test-action@v5
         with:
           tests-to-run: firmware/tests/renode/src/*.robot
+          renode-revision: "v1.16.1"
