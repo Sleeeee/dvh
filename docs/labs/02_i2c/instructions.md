@@ -29,11 +29,14 @@ Below is a check list of all the tools and skills that you need in order to perf
 
 ### Skill set
 
-
+- Principles of electronics
+- Basic familiarity with command line interfaces (CLIs)
 
 ## Objective
 
+The goal of this lab is to exploit the I²C bus of the DVH board. Plain text communication with an EEPROM is performed to retrieve sensitive configuration variables such as passwords. Your task is to interact with I²C to gain root access to the UART shell to find the flags.
 
+This lab contains 3 flags, formatted like so : `DVH{th1s_1s_4_f4k3_fl4g_385c951916}`.
 
 ## Instructions
 
@@ -42,3 +45,19 @@ Below is a check list of all the tools and skills that you need in order to perf
 > This step is off-limits in the scope of the lab.
 
 Since the EEPROM is independent from the STM32, it needs to go through an initialization process to make sure the environment is properly setup, and the EEPROM is in a valid state. In order to initialize or reset the lab, press the reset button while powering on the board. The LED will blink, and if everything goes smoothly, it will turn off. If it stays on, an error has occured, meaning the reset has not been completed. Please retry until you end up with an LED turned off.
+
+### Initial access
+
+Gain access to the UART shell as practiced in the [corresponding lab](../01_uart/README.md).
+
+### User escalation
+
+Now that you are an anonymous user inside the system, find a way to authenticate as a real system user.
+
+> Hint : Where does the password live ? How is it transmitted ?
+
+### Root escalation
+
+With standard user privileges, find a way to gain root access to obtain the third flag.
+
+> Hint : Exploit eveything in the environment, the EEPROM might respond to other masters than the STM32. Completing this step requires two specific clues.
