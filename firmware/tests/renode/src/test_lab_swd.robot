@@ -9,7 +9,7 @@ Test Teardown         Teardown
 *** Variables ***
 ${PLATFORM}           ${CURDIR}/../platforms/dvh.repl
 ${ELF}                ${CURDIR}/../../../build_simulation/firmware.elf
-${HOOKS_SCRIPT}       ${CURDIR}/utils/hooks.py
+${HOOKS_SCRIPT}       ${CURDIR}/utils/hooks_lab_swd.py
 
 *** Test Cases ***
 Verify Lab SWD
@@ -20,7 +20,7 @@ Verify Lab SWD
   Execute Command     mach create "dvh_test_swd"
   Execute Command     machine LoadPlatformDescription @${PLATFORM}
   Execute Command     sysbus LoadELF @${ELF}
-  
+
   # Config
   Create Log Tester   0
   Execute Command     logLevel 0
@@ -29,7 +29,7 @@ Verify Lab SWD
   # Run
   Execute Command     include @${HOOKS_SCRIPT}
   Execute Command     start
-  
+
   # Verify
   Wait For Log Entry  Success: LAB_SWD_FLAG_ONE found!    timeout=5
   Wait For Log Entry  Success: LAB_SWD_FLAG_TWO found!    timeout=5
