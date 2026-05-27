@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Install build-essential # Contains gcc and standard C libraries
         run: |
@@ -37,10 +37,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Install ARM Toolchain
-        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        uses: carlosperate/arm-none-eabi-gcc-action@0725d97b026acf7fc8e22dfd5bee912998879ba8
         with:
           release: "14.2.Rel1"
 
@@ -55,7 +55,7 @@ jobs:
           cmake --build build_simulation
 
       - name: Run Renode tests
-        uses: antmicro/renode-test-action@v5
+        uses: antmicro/renode-test-action@0705567acf04d7b998d7deac1e05d9067d70d901
         with:
           tests-to-run: firmware/tests/renode/src/*.robot
           renode-revision: "v1.16.1"
