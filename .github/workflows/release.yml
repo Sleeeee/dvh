@@ -1,4 +1,4 @@
-name: Release Firmware
+name: Release Firmware and Hardware
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - "v*.*.*"
 
 jobs:
-  build-and-release:
+  release-firmware:
     runs-on: ubuntu-latest
 
     permissions:
@@ -35,7 +35,36 @@ jobs:
           cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=cmake/gcc-arm-none-eabi.cmake
           cmake --build build
 
-      - name: Publish GitHub Release
+      - name: Publish firmware Release
         uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
         with:
           files: firmware/build/firmware.bin # Root path needed
+
+  release-hardware:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Find latest hardware version
+        run: |
+          cd hardware
+          LATEST_DIR=$(ls -d v* | sort -V | tail -n 1) # Matches latest v* dir
+          echo "LATEST=$LATEST_DIR" >> $GITHUB_ENV
+
+      - name: Generate Gerbers
+        uses: INTI-CMNB/KiBot@e87c53b5c7b695936ba8766083e82653dacd7ed8
+        with:
+          config: hardware/kibot.yaml
+          dir: hardware/${{ env.LATEST }}/kicad/Fabrication
+          schema: hardware/${{ env.LATEST }}/kicad/${{ env.LATEST }}.kicad_sch
+          board: hardware/${{ env.LATEST }}/kicad/${{ env.LATEST }}.kicad_pcb
+
+      - name: Publish hardware Release
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
+        with:
+          files: hardware/${{ env.LATEST }}/kicad/Fabrication/JLCPCB_Zip.zip
