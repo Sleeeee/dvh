@@ -12,6 +12,7 @@ build_simulation/
 log.html
 report.html
 robot_output.xml
+coverage.info
 
 attiny.h
 

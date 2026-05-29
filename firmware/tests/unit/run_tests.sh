@@ -16,6 +16,7 @@ INCLUDES=(
   "-I dvh/labs/03_glitch/include"
 )
 MOCK_SOURCE="$MOCK_DIR/mock_hal.c"
+COVERAGE_FLAGS="--coverage -O0 -g"
 
 if [ ! -d "$TEST_DIR" ]; then
   echo "Error: unable to find the test directory $TEST_DIR"
@@ -31,7 +32,7 @@ for test_file in "$TEST_DIR"/*.c; do
   ((TOTAL_TESTS++))
   echo "Compiling $test_file..."
 
-  if ! gcc ${INCLUDES[@]} -o "$BINARY" "$test_file" "$UNITY_SRC" "$MOCK_SOURCE"; then
+  if ! gcc ${INCLUDES[@]} $COVERAGE_FLAGS -o "$BINARY" "$test_file" "$UNITY_SRC" "$MOCK_SOURCE"; then
     echo -e "Error: Compilation failed\n"
     ((FAILED_TESTS++))
     continue
@@ -47,8 +48,17 @@ for test_file in "$TEST_DIR"/*.c; do
   echo ""
 done
 
-echo "Cleaning up binary..."
+echo "Generating code report..."
+lcov -q --capture --directory . --output-file coverage.info 2>/dev/null
+lcov -q --ignore-errors unused --remove coverage.info '*/tests/*' '/usr/*' '*/unity.c' '*/mock_hal.c' --output-file coverage.info 2>/dev/null
+
+COVERAGE_PCT=$(lcov --summary coverage.info 2>/dev/null | grep "lines" | awk '{print $2}')
+echo "Line Coverage: $COVERAGE_PCT"
+
+echo "Cleaning up artifacts..."
 rm "$BINARY"
+find . -type f -name "*.gcda" -delete
+find . -type f -name "*.gcno" -delete
 
 echo "Test suites results: $TOTAL_TESTS total, $((TOTAL_TESTS - FAILED_TESTS)) passed"
 
